@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Console = SRML.Console.Console;
 using ElementalFireTree;
 using UnityEngine;
+using SRML.SR.Translation;
 
 namespace ElementalFireTree
 {
@@ -14,6 +15,18 @@ namespace ElementalFireTree
         public static System.Random rnd = new System.Random();
         public static Console.ConsoleInstance console =  new Console.ConsoleInstance("ElementalFireTree");
         public static void Log(this string message) => console.Log(message);
+        public static void Log(this object message) => console.Log(message);
+
+        public static PersonalUpgradeTranslation GetTranslation(this PlayerState.Upgrade upgrade) => new PersonalUpgradeTranslation(upgrade);
+
+        public static void PrintAllChildren(this GameObject gameObject)
+        {
+            ("Printing all Children of " + gameObject).Log();
+            for (int i = 0; i < gameObject.transform.childCount; i++)
+            {
+                gameObject.transform.GetChild(i).gameObject.name.Log();
+            }
+        }
 
         public static void PrintContent(this Shader shader, Material material = null)
         {

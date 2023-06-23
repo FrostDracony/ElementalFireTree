@@ -13,7 +13,6 @@ namespace ElementalFireTree
         public static GameObject CreateLiquid(Identifiable.Id ID, string name, Identifiable.Id liquidBase, Sprite icon, Color32 vacColor, Material mat)
         {
 
-
             string objName = name;
 
             GameObject Prefab = SRML.Utils.PrefabUtils.CopyPrefab(SRSingleton<GameContext>.Instance.LookupDirector.GetPrefab(liquidBase));
@@ -28,19 +27,31 @@ namespace ElementalFireTree
             GameObject sphere = Prefab.FindChild("Sphere");
             MeshRenderer render = sphere.GetComponent<MeshRenderer>();
 
-
-
             render.sharedMaterial = mat;
             sphere.FindChild("FX Water Glops").GetComponent<ParticleSystemRenderer>().material = mat;
+            //Prefab.GetComponent<SphereCollider>().isTrigger = true;
 
             GameObject InFx = SRSingleton<GameContext>.Instance.LookupDirector.GetLiquidIncomingFX(liquidBase);
             GameObject VacFailFx = SRSingleton<GameContext>.Instance.LookupDirector.GetLiquidVacFailFX(liquidBase);
             LiquidDefinition definition = ScriptableObject.CreateInstance<LiquidDefinition>();
             definition.name = objName;
+            InFx.FindChild("Water Glops").GetComponent<ParticleSystemRenderer>().material = mat;
+
             typeof(LiquidDefinition).GetField("id", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue(definition, ID);
             typeof(LiquidDefinition).GetField("inFX", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue(definition, InFx);
             typeof(LiquidDefinition).GetField("vacFailFX", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue(definition, VacFailFx);
             LookupRegistry.RegisterLiquid(definition);
+
+            /*GameObject liquidTrigger = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            liquidTrigger.name = (name+"Trigger");
+            liquidTrigger.transform.localScale = Prefab.transform.localScale;
+            liquidTrigger.transform.SetParent(Prefab.transform);
+            //fSTrigger.GetComponent<Renderer>().enabled = false;*/
+            
+            /*Rigidbody liquidTriggerRb = Prefab.GetComponent<Rigidbody>();//liquidTrigger.AddComponent<Rigidbody>();
+            liquidTriggerRb.useGravity = true;
+            liquidTriggerRb.detectCollisions = true;*/
+
             return Prefab;
         }
         public static Material CreateLiquidMaterial(Identifiable.Id baseId, string name, Texture ramp, float waveFade, float waveSpeed, float waveNoise, float waveHeight, float refractedLightFade, float refractionAmount, Texture dirt, float dirtFade)

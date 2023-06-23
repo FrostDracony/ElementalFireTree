@@ -26,7 +26,7 @@ namespace ElementalFireTree.Patches
                 FirestormController component = region.GetComponent<FirestormController>();
                 if (component != null)
                     component.AddColumnsToList(nearbyColumns);
-            }
+            } 
             if (nearbyColumns.Count > 0)
             {
                 Dictionary<FireColumn, float> weightMap = new Dictionary<FireColumn, float>();
@@ -48,7 +48,18 @@ namespace ElementalFireTree.Patches
                 if (Main.specialColumns.Count <= 10)
                 {
                     //Getting a random column from all of them
-                    FireColumn column = nearbyColumns[Extensions.rnd.Next(nearbyColumns.Count)];
+                    int randomColumn = Extensions.rnd.Next(nearbyColumns.Count);
+                    FireColumn column = nearbyColumns[randomColumn];
+                    /*Main.recoveryColumns.Add(column);
+
+                    Vector3 originalPosition = column.transform.position;
+                    Quaternion originalRotation = column.transform.rotation;
+                    column.Destroy();
+                    column = Main.exampleFireColumn.CreatePrefabCopy().GetComponentInChildren<FireColumn>();
+
+                    //Setting the original position/rotation
+                    column.transform.position = originalPosition;
+                    column.transform.rotation = originalRotation;*/
 
                     //Setting the lifetime, aka how long it's going to last around
                     //("Printing columns lifetime: " + column.GetField("lifetimeHrs")).Log();
@@ -71,15 +82,20 @@ namespace ElementalFireTree.Patches
 
                     LiquidSource liquidSource = null;
 
-                    if(column.transform.gameObject.GetComponentInChildren<LiquidSource>(true) == null) //In case there isn't a LiquidSource already present
+                    if (column.transform.gameObject.GetComponentInChildren<LiquidSource>(true) == null) //In case there isn't a LiquidSource already present
                     {
-                        GameObject @object = new GameObject("liquidSourceContainer"); //We're using this GameObject that way we have more control on where to position our 
+
+                        //GameObject @object = new GameObject("liquidSourceContainer"); //We're using this GameObject that way we have more control on where to position our 
+                        GameObject @object = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+                        @object.name = "liquidSourceContainer";
+                        @object.layer = LayerMask.NameToLayer("Water");
+
                         CapsuleCollider capsuleCollider = @object.AddComponent<CapsuleCollider>(); //We're adding a CapsuleCollider component to our gameobject for the LiquidSource
-                        
+
                         #region Setting CapsuleColliders properties
                         capsuleCollider.direction = 1;
                         capsuleCollider.height = 2f; //2f
-                        capsuleCollider.radius = 7f; //3.5f
+                        capsuleCollider.radius = 3.5f; //7f
                         capsuleCollider.contactOffset = 0.01f;
                         capsuleCollider.isTrigger = true;
                         #endregion
@@ -88,22 +104,26 @@ namespace ElementalFireTree.Patches
                         //asdfghjklm
 
                         liquidSource = @object.AddComponent<LiquidSource>(); //We're adding the LiquidSource component to our gameobject
-                        @object.transform.position = column.transform.position; //Setting the position of the GameObject
+                        @object.transform.position = column.transform.position + new Vector3(0f, 4f); //Setting the position of the GameObject
+                        @object.transform.localScale = new Vector3(1f, 1f, 1f);
                         @object.transform.SetParent(column.transform, true); //Setting the parent of this GameObject to the firecolumn, also we're going to keep the position we assigned before
 
+
+
+                        /*("column's parent is: " + column.transform.parent.name).Log();
                         "Little GameObject test".Log();
                         @object.name.Log();
                         "Verified - Little GameObject test".Log();
 
                         "Little Transform Parent test".Log();
                         liquidSource.gameObject.transform.parent.name.Log();
-                        "Verified - Little Transform Parent test".Log();
+                        "Verified - Little Transform Parent test".Log();*/
                     }
                     else //Else
                     {
                         liquidSource = column.transform.gameObject.GetComponentInChildren<LiquidSource>(); //We're just getting the already present LiquidSource
                     }
-                    
+
                     liquidSource.bounceDamp = 0.8f;
                     liquidSource.floatForcePerDepth = 10;
                     liquidSource.liquidId = Ids.FIRE_LIQUID;

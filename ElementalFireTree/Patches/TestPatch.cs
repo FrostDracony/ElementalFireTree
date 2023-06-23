@@ -17,12 +17,17 @@ namespace ElementalFireTree.Patches
     {
         public static bool Prefix(LiquidSource __instance, GameModel game)
         {
+            
             ("GameModel's name: " + game.name).Log();
             ("LiquidSource's name: " + __instance.name).Log();
             ("LiquidSource's active state: " + __instance.enabled).Log();
             ("LiquidSource's transform's name: " + __instance.transform.name).Log();
+            "Well, lets see if there exists an liquidSourceContainer object:".Log();
+            ("liquidSourceContainer is: " + GameObject.Find("liquidSourceContainer")).Log();
             "LiquidSource's parent's name: ".Log();
-            __instance.gameObject.transform.parent.name.Log();
+            if (__instance.name == "liquidSourceContainer")
+                return false;
+            //__instance.Register(SceneContext.Instance.GameModel);
             "CMON".Log();
             return true;
         }
