@@ -50,6 +50,29 @@ namespace Creators
 
     }
 */
+	public class CrystalAbsorbElementalFire : MonoBehaviour
+    {
+		int counter = 5;
+		public void OnCollisionEnter(Collision col)
+        {
+			Identifiable ident = col.gameObject.GetComponent<Identifiable>();
+			if (ident != null && ident.id == Ids.FIRE_LIQUID)
+            {
+				counter--;
+				if(counter == 0)
+                {
+					SRBehaviour.InstantiateActor(
+						SRSingleton<GameContext>.Instance.LookupDirector.GetPrefab(Ids.ELEMENTAL_FIRE_ENHANCER),
+						SceneContext.Instance.Player.GetComponent<RegionMember>().setId,
+						transform.position,
+						transform.rotation
+					);
+					Destroyer.DestroyActor(gameObject, "transforming using elemental fire liquid");
+                }
+            }
+        }
+
+	}
 
 	public class StartFusionProcess : MonoBehaviour
     {
@@ -67,7 +90,7 @@ namespace Creators
 			//transform.localScale = new Vector3(radius, radius, radius);
         }
 
-		void Update()
+/*		void Update()
         {
 			if(slimeArrived && liquidArrived)
             {
@@ -77,7 +100,7 @@ namespace Creators
 					true);
 				Destroy(gameObject);
             }
-        }
+        }*/
 
         void OnTriggerEnter(Collider other)
         {

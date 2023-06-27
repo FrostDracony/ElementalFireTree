@@ -40,7 +40,7 @@ namespace Creators
                 },*/
                 SlimeAppearance.Palette.FromMaterial(material),
                 Color.red,
-                Identifiable.Id.PINK_SLIME,
+                Identifiable.Id.RAD_SLIME,
                 autoRegister);
             
             SlimeDefinition slimeDefinition = SlimeTuple.Item1;
@@ -118,7 +118,7 @@ namespace Creators
             slimeObject.AddComponent<ChangeParticlesAngry>();
             //slimeObject.AddComponent<ChangeParticlesNormal>();
 
-            Object.Destroy(slimeObject.GetComponent(typeof(PinkSlimeFoodTypeTracker)));
+            //Object.Destroy(slimeObject.GetComponent(typeof(PinkSlimeFoodTypeTracker)));
 
             return (slimeDefinition, slimeObject);
         }

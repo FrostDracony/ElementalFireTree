@@ -74,6 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Creators\Components.cs" />
+    <Compile Include="Creators\ExchangeCreator.cs" />
     <Compile Include="Creators\Ids.cs" />
     <Compile Include="Creators\Liquids.cs" />
     <Compile Include="Creators\Slimes.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="Creators\TextureUtils.cs" />
     <Compile Include="Helpers\Extensions.cs" />
     <Compile Include="Main.cs" />
+    <Compile Include="Patches\ExchangeDirectorPatches.cs" />
     <Compile Include="Patches\FireColumnPatch.cs" />
     <Compile Include="Patches\IdentifiablePatch.cs" />
     <Compile Include="Patches\PlayerIgniteReactPatch.cs" />

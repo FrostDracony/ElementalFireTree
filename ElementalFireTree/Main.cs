@@ -40,7 +40,11 @@ namespace ElementalFireTree
                 Ids.FIRE_LIQUID_VAC,
                 x => x.CreateBasicLock(
                     new PlayerState.Upgrade?(PlayerState.Upgrade.LIQUID_SLOT),
-                    () => SRSingleton<SceneContext>.Instance.PediaDirector.pediaModel != null && SRSingleton<SceneContext>.Instance.PediaDirector.IsUnlocked(PediaDirector.Id.FIRE_SLIME),
+                    () => SRSingleton<SceneContext>.Instance.PediaDirector.pediaModel != null
+                            && SRSingleton<SceneContext>.Instance
+                            .PediaDirector
+                            .IsUnlocked(PediaDirector.Id.FIRE_SLIME)
+                            && SceneContext.Instance.ExchangeDirector.progressDir.GetProgress(SceneContext.Instance.ExchangeDirector.GetProgressEntry(ExchangeDirector.OfferType.VIKTOR).progressType) == 4,
                     12f
                 )
             );
@@ -57,6 +61,7 @@ namespace ElementalFireTree
         public override void Load()
         {
             "Load".Log();
+
 
             GameObject testObject = SRSingleton<GameContext>.Instance.LookupDirector.GetPrefab(Identifiable.Id.STRANGE_DIAMOND_CRAFT).CreatePrefabCopy();
             testObject.GetComponent<Identifiable>().id = Ids.ELEMENTAL_FIRE_ENHANCER;
@@ -105,7 +110,7 @@ namespace ElementalFireTree
             
             //It is said to enhance the strenghts of everything that's fire, but to activate it it requires some ancient form of liquid...
             TranslationPatcher.AddActorTranslation("l.elemental_fire_combinator", "Elemental Fire Combinator");
-
+            
 
             // We'll need this one later on when we patch the firecolumns
             exampleFireColumn = SRObjects.GetInst<GameObject>("zoneDESERT/cellDesert_ScorchedPlainsNorthEast/Sector/FireColumn_ScorchedPlainsNorthEast");
@@ -134,6 +139,7 @@ namespace ElementalFireTree
         public override void PostLoad()
         {
             "PostLoad".Log();
+            SRCallbacks.OnSaveGameLoaded += SRCallbacks_OnSaveGameLoaded;
 
             SRCallbacks.OnSaveGameLoaded += (SceneContext t) => {
                 //Updating our personal zonetracker variable as soon as the game is loaded
@@ -174,10 +180,304 @@ namespace ElementalFireTree
                 producesId = Identifiable.Id.NONE
             });
 
+            SRSingleton<GameContext>
+                .Instance
+                .LookupDirector
+                .GetPrefab(Identifiable.Id.STRANGE_DIAMOND_CRAFT)
+                .AddComponent<CrystalAbsorbElementalFire>();
 
             //https://answers.unity.com/questions/131279/istrigger-causing-object-to-be-non-rigid.html
+
+
+
+
             "End of PostLoad".Log();
         }
+
+        void SRCallbacks_OnSaveGameLoaded(SceneContext t)
+        {
+
+            #region Changing Mochi's RewardLevels
+            ExchangeDirector exchangeDirector = SRSingleton<SceneContext>.Instance.ExchangeDirector;
+            int i = 0;
+            Array.ForEach(exchangeDirector.progressOffers, 
+                x => { 
+                    ("index " + i + " + " + x.specialOfferType + " and a progresstype of " + x.progressType).Log();
+                    ("And it has as intro text: ").Log();
+                    Array.ForEach(x.rancherChatEndIntro.entries, x1 => ("      " + SRSingleton<GameContext>.Instance.MessageDirector.GetBundle("exchange").Get(x1.messageText)).Log());
+                    ("And it has as repeat text: ").Log();
+                    Array.ForEach(x.rancherChatEndRepeat.entries, x1 => ("      " + SRSingleton<GameContext>.Instance.MessageDirector.GetBundle("exchange").Get(x1.messageText)).Log());
+
+                    i++;
+                }
+            );
+
+            ExchangeDirector.ProgressOfferEntry progressOfferEntry2 = exchangeDirector.progressOffers[2];
+
+            int debugIndex = 0;
+
+            progressOfferEntry2.rewardLevels[0].requestedItem = Identifiable.Id.PINK_SLIME;
+            progressOfferEntry2.rewardLevels[0].count = 1;
+
+            "".Log();
+            "For rewardLevel 0, the introtext is:".Log();
+            Array.ForEach(progressOfferEntry2.rewardLevels[0].rancherChatIntro.entries,
+                x => 
+                { 
+                    ("      " + SRSingleton<GameContext>.Instance.MessageDirector.GetBundle("exchange").Get(x.messageText) + " at index: " + debugIndex + " and image " + x.rancherImage).Log(); 
+                    debugIndex++;
+                }
+            );
+
+            debugIndex = 0;
+
+            "".Log();
+            "For rewardLevel 0, the repeattext is:".Log();
+            Array.ForEach(progressOfferEntry2.rewardLevels[0].rancherChatRepeat.entries,
+                x =>
+                {
+                    ("      " + SRSingleton<GameContext>.Instance.MessageDirector.GetBundle("exchange").Get(x.messageText) + " at index: " + debugIndex + " and image " + x.rancherImage).Log();
+                    debugIndex++;
+                }
+            );
+
+            debugIndex = 0;
+
+            progressOfferEntry2.rewardLevels[1].requestedItem = Identifiable.Id.PINK_SLIME;
+            progressOfferEntry2. rewardLevels[1].count = 1;
+
+            "".Log();
+            "For rewardLevel 1, the introtext is:".Log();
+            Array.ForEach(progressOfferEntry2.rewardLevels[1].rancherChatIntro.entries,
+                x =>
+                {
+                    ("      " + SRSingleton<GameContext>.Instance.MessageDirector.GetBundle("exchange").Get(x.messageText) + " at index: " + debugIndex + " and image " + x.rancherImage).Log();
+                    debugIndex++;
+                }
+            );
+
+            debugIndex = 0;
+
+            "".Log();
+            "For rewardLevel 1, the repeattext is:".Log();
+            Array.ForEach(progressOfferEntry2.rewardLevels[1].rancherChatRepeat.entries,
+                x =>
+                {
+                    ("      " + SRSingleton<GameContext>.Instance.MessageDirector.GetBundle("exchange").Get(x.messageText) + " at index: " + debugIndex + " and image " + x.rancherImage).Log();
+                    debugIndex++;
+                }
+            );
+
+            debugIndex = 0;
+
+            progressOfferEntry2.rewardLevels[2].requestedItem = Identifiable.Id.PINK_SLIME;
+            progressOfferEntry2.rewardLevels[2].count = 1;
+
+            "".Log();
+            "For rewardLevel 2, the introtext is:".Log();
+            Array.ForEach(progressOfferEntry2.rewardLevels[2].rancherChatIntro.entries,
+                x =>
+                {
+                    ("      " + SRSingleton<GameContext>.Instance.MessageDirector.GetBundle("exchange").Get(x.messageText) + " at index: " + debugIndex + " and image " + x.rancherImage).Log();
+                    debugIndex++;
+                }
+            );
+
+            debugIndex = 0;
+
+            "".Log();
+            "For rewardLevel 2, the repeattext is:".Log();
+            ("And it has a length of: " + progressOfferEntry2.rewardLevels[2].rancherChatRepeat.entries.Length).Log();
+            Array.ForEach(progressOfferEntry2.rewardLevels[2].rancherChatRepeat.entries,
+                x =>
+                {
+                    ("      " + SRSingleton<GameContext>.Instance.MessageDirector.GetBundle("exchange").Get(x.messageText) + " at index: " + debugIndex + " and image " + x.rancherImage).Log();
+                    debugIndex++;
+                }
+            );
+
+            debugIndex = 0;
+
+            //Array.Resize(ref progressOfferEntry2.rewardLevels, progressOfferEntry2.rewardLevels.Length + 1);
+            #endregion
+            "huh it worked until here?".Log();
+            #region Conversations
+            RancherChatMetadata.Entry[] introConversation = exchangeDirector.CreateRancherChatConversation("mochi",
+                new string[]
+                {
+                    "SO, NOW ALL I NEED TO DO IS-",
+                    "UH, A CALL INCOMING?",
+                    "GIVE ME A SECOND-",
+                    "Oh, hello Beatrix! Glad to see you are back! I wonder what brings you here?",
+                    "There should not be any other problems with the Slimeulation, not any I know...",
+                    "Oh, a new sort of slime?",
+                    "Hmm...",
+                    "...",
+                    "...",
+                    "b...",
+                    "B R I L I A N T!!!",
+                    "I seriously cannot wait any longer to analyze it!",
+                    "Being able to manipulate fire... may they be long lost relatives to the fire slimes?",
+                    "Enough chit-chat, give me some plorts of this slime",
+                    "The faster I get the plorts, the faster I get to add them to the Slimeulation",
+                    "... and I guess give you more informations on how to handle it's problematic heat too... of course",
+                    "Well-",
+                    "UNTIL THEN, I WILL PREPARE MY SLIMEULATION TO WELCOME THE NEW SLIMES, HOPE TO SEE YOU SOON!",
+                    },
+                new Sprite[]
+                {
+                    SRObjects.Get<Sprite>("viktor_bubble_work"),
+                    SRObjects.Get<Sprite>("viktor_bubble_surprise"),
+                    SRObjects.Get<Sprite>("viktor_bubble_surprise"),
+                    SRObjects.Get<Sprite>("viktor_debubbling"),
+                    SRObjects.Get<Sprite>("viktor_greeting"),
+                    SRObjects.Get<Sprite>("viktor_confused"),
+                    SRObjects.Get<Sprite>("viktor_thinking"),
+                    SRObjects.Get<Sprite>("viktor_default2"),
+                    SRObjects.Get<Sprite>("viktor_speechless"),
+                    SRObjects.Get<Sprite>("viktor_default2"),
+                    SRObjects.Get<Sprite>("viktor_eureka"),
+                    SRObjects.Get<Sprite>("viktor_happy"),
+                    SRObjects.Get<Sprite>("viktor_thinking"),
+                    SRObjects.Get<Sprite>("viktor_default2"),
+                    SRObjects.Get<Sprite>("viktor_explain"),
+                    SRObjects.Get<Sprite>("viktor_speechless"),
+                    SRObjects.Get<Sprite>("viktor_debubbling"),
+                    SRObjects.Get<Sprite>("viktor_bubble_point")
+                });
+
+            /*
+             * All the Images:
+             * viktor_greeting
+             * viktor_happy
+             * viktor_default2
+             * viktor_explain
+             * viktor_thinking
+             * viktor_bubble_work 
+             * viktor_bubble_surprise
+             * viktor_debubbling
+             * viktor_confused
+             * viktor_eureka
+             * viktor_sad
+             * viktor_work
+             * viktor_uneasy
+             * viktor_guilty
+             * viktor_static
+             * viktor_bubble_point
+             * viktor_speechless
+            */
+
+            RancherChatMetadata.Entry[] repeatConversation = exchangeDirector.CreateRancherChatConversation("mochi",
+                new string[]
+                {
+                    "Oh, checking on any progress?",
+                    "I would love to keep you updated... but...",
+                    "I sadly have to announce tragic news...",
+                    "I am not sure if you will be able to bare it...",
+                    "My coffee machine broke! Can you believe it?!",
+                    "Why do you sound disappointed? It is every scientists' deepest fears to not have their daily dose of caffeine",
+                    "Do you know how hard it is to remain awake, working long hours and barely sleep, every day, without a good cup of coffee?",
+                    "Anyways, while I continue repairing my coffee machine, feel free to continue collecting the plorts I will need later on",
+                    "Maybe I might be able to add them to my coffee machine in order to warm the water...",
+                    "On that note-",
+                    "ENOUGH CHATTING, SEE YOU LATER ON BEATRIX.",
+                },
+                new Sprite[]
+                {
+                    SRObjects.Get<Sprite>("viktor_work"),
+                    SRObjects.Get<Sprite>("viktor_uneasy"),
+                    SRObjects.Get<Sprite>("viktor_sad"),
+                    SRObjects.Get<Sprite>("viktor_guilty"),
+                    SRObjects.Get<Sprite>("viktor_guilty"),
+                    SRObjects.Get<Sprite>("viktor_speechless"),
+                    SRObjects.Get<Sprite>("viktor_confused"),
+                    SRObjects.Get<Sprite>("viktor_default2"),
+                    SRObjects.Get<Sprite>("viktor_thinking"),
+                    SRObjects.Get<Sprite>("viktor_debubbling"),
+                    SRObjects.Get<Sprite>("viktor_bubble_point")
+                });
+
+            RancherChatMetadata.Entry[] endingConversation = exchangeDirector.CreateRancherChatConversation("mochi",
+                new string[]
+                {
+                    "GREAT JOB!",
+                    "Oh...",
+                    "Great job!",
+                    "So... I have two good news and a bad new",
+                    "The first good one...",
+                    "My coffee machine is back on track! Meaning I was able to work back to my normal workrythm.",
+                    "Oh..., I guess that is not the news you were expecting",
+                    "The other one is that I was able to find a solution to keep your new slimes from burning everything down near them.",
+                    "The bad new... I sadly was not able to include the new slimes to my Slimeulation",
+                    "Something is impeding me, but it seems to be outside of my current undrestanding",
+                    "But hey, thanks to Thora I was able to prepare your solution",
+                    "Hmm, Thora? Are you surprised that I have a coffee and music friend?",
+                    "She was even able to repair my authentic, broken coffee machine! I truly could not continue my work without it.",
+                    "I still don't know how she managed to find the solution.",
+                    "But as long as I get my cup of coffee in the morning while listening to some jazz, I will not question it.",
+                    "Anyways, still feel free to enter my Slimeulation and gather more bug reports.",
+                    "Now-",
+                    "IF YOU WILL EXCUSE ME, I HAVE SOME EXPERIMENTS TO RUN, I WISH YOU A WONDERFUL DAY MY FRIEND",
+                },
+                new Sprite[]
+                {
+                    SRObjects.Get<Sprite>("viktor_bubble_work"),
+                    SRObjects.Get<Sprite>("viktor_bubble_surprise"),
+                    SRObjects.Get<Sprite>("viktor_debubbling"),
+                    SRObjects.Get<Sprite>("viktor_greeting"),
+                    SRObjects.Get<Sprite>("viktor_default2"),
+                    SRObjects.Get<Sprite>("viktor_eureka"),
+                    SRObjects.Get<Sprite>("viktor_confused"),
+                    SRObjects.Get<Sprite>("viktor_happy"),
+                    SRObjects.Get<Sprite>("viktor_sad"),
+                    SRObjects.Get<Sprite>("viktor_uneasy"),
+                    SRObjects.Get<Sprite>("viktor_explain"),
+                    SRObjects.Get<Sprite>("viktor_speechless"),
+                    SRObjects.Get<Sprite>("viktor_eureka"),
+                    SRObjects.Get<Sprite>("viktor_thinking"),
+                    SRObjects.Get<Sprite>("viktor_default2"),
+                    SRObjects.Get<Sprite>("viktor_work"),
+                    SRObjects.Get<Sprite>("viktor_debubbling"),
+                    SRObjects.Get<Sprite>("viktor_bubble_work")
+                });
+            #endregion
+            
+            "Still working?".Log();
+
+            RancherChatMetadata rancherChatMetadataIntro = ScriptableObject.CreateInstance<RancherChatMetadata>();
+            rancherChatMetadataIntro.entries = introConversation;
+
+            "Damn, still working".Log();
+
+            RancherChatMetadata rancherChatMetadataRepeat = ScriptableObject.CreateInstance<RancherChatMetadata>();
+            rancherChatMetadataRepeat.entries = repeatConversation;
+
+            "Holy, is this really really still working?".Log();
+
+            rancherChatMetadataIntro.entries = progressOfferEntry2.rancherChatEndIntro.entries.Concat(rancherChatMetadataIntro.entries).ToArray();
+            progressOfferEntry2.rancherChatEndIntro.entries = endingConversation;
+
+            "No fucking way".Log();
+
+            Array.Resize(ref progressOfferEntry2.rewardLevels, progressOfferEntry2.rewardLevels.Length + 1);
+
+            progressOfferEntry2.rewardLevels[3] = ExchangeCreator.CreateRewardLevel(
+                                        1,
+                                        rancherChatMetadataIntro,
+                                        rancherChatMetadataRepeat,
+                                        Identifiable.Id.BLUE_ECHO,
+                                        Ids.FIRE_LIQUID_VAC_REW
+                                      );
+
+            "Nope still not".Log();
+
+            exchangeDirector.nonIdentRewardDict.Add(
+                Ids.FIRE_LIQUID_VAC_REW,
+                SRSingleton<SceneContext>.Instance.PediaDirector.entries.First((PediaDirector.IdEntry x) => x.id == PediaDirector.Id.ORNAMENTS).icon
+            );
+
+        }
+
 
     }
 }
