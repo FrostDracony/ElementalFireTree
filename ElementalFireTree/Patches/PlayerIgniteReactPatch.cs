@@ -21,6 +21,7 @@ namespace ElementalFireTree.Patches
             /*("What is damaging the player? Its name is: " + source.name).Log();
             ("Damage amount is: " + healthLoss).Log();
             */
+            source = source == null ? __instance.gameObject : source;
             if(source.name == "FireBallExploding(Clone)" || source.name == "FireBall(Clone)")
             {
                 healthLoss = Mathf.RoundToInt(Mathf.Clamp(healthLoss * SRSingleton<SceneContext>.Instance.GameModeConfig.GetModeSettings().playerDamageMultiplier, 20f, 120f));

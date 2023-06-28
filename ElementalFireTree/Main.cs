@@ -10,6 +10,7 @@ using SRML.SR;
 using SRML.Utils;
 using UnityEngine;
 using Creators;
+using ElementalFireTree.Upgrades;
 
 namespace ElementalFireTree
 {
@@ -51,7 +52,8 @@ namespace ElementalFireTree
             #endregion
 
             Slimes.RegisterAllSlimePedia();
-
+            LandPlotUpgradeRegistry.RegisterPurchasableUpgrade<CorralUI>(ThermalRegulator.CreateThermalRegulatorEntry());
+            LandPlotUpgradeRegistry.RegisterPlotUpgrader<ThermalRegulator>(LandPlot.Id.CORRAL);
             HarmonyInstance.PatchAll();
         }
 
@@ -83,7 +85,7 @@ namespace ElementalFireTree
 
             foreach (Renderer rdr in radiusBall.GetComponentsInChildren<Renderer>())
             {
-                //rdr.enabled = false;
+                rdr.enabled = false;
             }
             /*foreach (SphereCollider coll in radiusBall.GetComponentsInChildren<SphereCollider>())
             {
@@ -196,10 +198,12 @@ namespace ElementalFireTree
 
         void SRCallbacks_OnSaveGameLoaded(SceneContext t)
         {
+            ExchangeDirector exchangeDirector = SRSingleton<SceneContext>.Instance.ExchangeDirector;
+            ExchangeDirector.ProgressOfferEntry progressOfferEntry2 = exchangeDirector.progressOffers[2];
+            Array.Resize(ref progressOfferEntry2.rewardLevels, progressOfferEntry2.rewardLevels.Length + 2);
 
             #region Changing Mochi's RewardLevels
-            ExchangeDirector exchangeDirector = SRSingleton<SceneContext>.Instance.ExchangeDirector;
-            int i = 0;
+            /*int i = 0;
             Array.ForEach(exchangeDirector.progressOffers, 
                 x => { 
                     ("index " + i + " + " + x.specialOfferType + " and a progresstype of " + x.progressType).Log();
@@ -211,8 +215,6 @@ namespace ElementalFireTree
                     i++;
                 }
             );
-
-            ExchangeDirector.ProgressOfferEntry progressOfferEntry2 = exchangeDirector.progressOffers[2];
 
             int debugIndex = 0;
 
@@ -244,7 +246,7 @@ namespace ElementalFireTree
             debugIndex = 0;
 
             progressOfferEntry2.rewardLevels[1].requestedItem = Identifiable.Id.PINK_SLIME;
-            progressOfferEntry2. rewardLevels[1].count = 1;
+            progressOfferEntry2.rewardLevels[1].count = 1;
 
             "".Log();
             "For rewardLevel 1, the introtext is:".Log();
@@ -296,13 +298,14 @@ namespace ElementalFireTree
                 }
             );
 
-            debugIndex = 0;
-
-            //Array.Resize(ref progressOfferEntry2.rewardLevels, progressOfferEntry2.rewardLevels.Length + 1);
+            debugIndex = 0;*/
             #endregion
+
             "huh it worked until here?".Log();
+
             #region Conversations
-            RancherChatMetadata.Entry[] introConversation = exchangeDirector.CreateRancherChatConversation("mochi",
+            #region FirstConvo
+            RancherChatMetadata.Entry[] introConversation1 = exchangeDirector.CreateRancherChatConversation("viktor",
                 new string[]
                 {
                     "SO, NOW ALL I NEED TO DO IS-",
@@ -320,7 +323,7 @@ namespace ElementalFireTree
                     "Being able to manipulate fire... may they be long lost relatives to the fire slimes?",
                     "Enough chit-chat, give me some plorts of this slime",
                     "The faster I get the plorts, the faster I get to add them to the Slimeulation",
-                    "... and I guess give you more informations on how to handle it's problematic heat too... of course",
+                    "... and I guess give you more informations on how to handle it's problematic thermal radiation too... of course",
                     "Well-",
                     "UNTIL THEN, I WILL PREPARE MY SLIMEULATION TO WELCOME THE NEW SLIMES, HOPE TO SEE YOU SOON!",
                     },
@@ -367,7 +370,7 @@ namespace ElementalFireTree
              * viktor_speechless
             */
 
-            RancherChatMetadata.Entry[] repeatConversation = exchangeDirector.CreateRancherChatConversation("mochi",
+            RancherChatMetadata.Entry[] repeatConversation1 = exchangeDirector.CreateRancherChatConversation("viktor",
                 new string[]
                 {
                     "Oh, checking on any progress?",
@@ -397,7 +400,7 @@ namespace ElementalFireTree
                     SRObjects.Get<Sprite>("viktor_bubble_point")
                 });
 
-            RancherChatMetadata.Entry[] endingConversation = exchangeDirector.CreateRancherChatConversation("mochi",
+            RancherChatMetadata.Entry[] endingConversation1 = exchangeDirector.CreateRancherChatConversation("viktor",
                 new string[]
                 {
                     "GREAT JOB!",
@@ -440,31 +443,29 @@ namespace ElementalFireTree
                     SRObjects.Get<Sprite>("viktor_debubbling"),
                     SRObjects.Get<Sprite>("viktor_bubble_work")
                 });
-            #endregion
+            
             
             "Still working?".Log();
 
-            RancherChatMetadata rancherChatMetadataIntro = ScriptableObject.CreateInstance<RancherChatMetadata>();
-            rancherChatMetadataIntro.entries = introConversation;
+            RancherChatMetadata rancherChatMetadataIntro1 = ScriptableObject.CreateInstance<RancherChatMetadata>();
+            rancherChatMetadataIntro1.entries = introConversation1;
 
             "Damn, still working".Log();
 
-            RancherChatMetadata rancherChatMetadataRepeat = ScriptableObject.CreateInstance<RancherChatMetadata>();
-            rancherChatMetadataRepeat.entries = repeatConversation;
+            RancherChatMetadata rancherChatMetadataRepeat1 = ScriptableObject.CreateInstance<RancherChatMetadata>();
+            rancherChatMetadataRepeat1.entries = repeatConversation1;
 
             "Holy, is this really really still working?".Log();
 
-            rancherChatMetadataIntro.entries = progressOfferEntry2.rancherChatEndIntro.entries.Concat(rancherChatMetadataIntro.entries).ToArray();
-            progressOfferEntry2.rancherChatEndIntro.entries = endingConversation;
+            rancherChatMetadataIntro1.entries = progressOfferEntry2.rancherChatEndIntro.entries.Concat(rancherChatMetadataIntro1.entries).ToArray();
+            progressOfferEntry2.rancherChatEndIntro.entries = endingConversation1;
 
             "No fucking way".Log();
 
-            Array.Resize(ref progressOfferEntry2.rewardLevels, progressOfferEntry2.rewardLevels.Length + 1);
-
             progressOfferEntry2.rewardLevels[3] = ExchangeCreator.CreateRewardLevel(
                                         1,
-                                        rancherChatMetadataIntro,
-                                        rancherChatMetadataRepeat,
+                                        rancherChatMetadataIntro1,
+                                        rancherChatMetadataRepeat1,
                                         Identifiable.Id.BLUE_ECHO,
                                         Ids.FIRE_LIQUID_VAC_REW
                                       );
@@ -473,9 +474,135 @@ namespace ElementalFireTree
 
             exchangeDirector.nonIdentRewardDict.Add(
                 Ids.FIRE_LIQUID_VAC_REW,
-                SRSingleton<SceneContext>.Instance.PediaDirector.entries.First((PediaDirector.IdEntry x) => x.id == PediaDirector.Id.ORNAMENTS).icon
+                assetBundle.LoadAsset<Sprite>("FireUpgrade")
+            );
+            #endregion
+
+            #region SecondConvo
+            RancherChatMetadata.Entry[] introConversation2 = exchangeDirector.CreateRancherChatConversation("viktor",
+                new string[]
+                {
+                    "UNTIL THEN, I WILL PREPARE MY SLIMEULATION TO WELCOME THE NEW SLIMES, HOPE TO SEE YOU SOON!",
+                },
+                new Sprite[]
+                {
+                    SRObjects.Get<Sprite>("viktor_bubble_point")
+                }
             );
 
+            /*
+             * All the Images:
+             * viktor_greeting
+             * viktor_happy
+             * viktor_default2
+             * viktor_explain
+             * viktor_thinking
+             * viktor_bubble_work 
+             * viktor_bubble_surprise
+             * viktor_debubbling
+             * viktor_confused
+             * viktor_eureka
+             * viktor_sad
+             * viktor_work
+             * viktor_uneasy
+             * viktor_guilty
+             * viktor_static
+             * viktor_bubble_point
+             * viktor_speechless
+            */
+
+            RancherChatMetadata.Entry[] repeatConversation2 = exchangeDirector.CreateRancherChatConversation("viktor",
+                new string[]
+                {
+                    "ENOUGH CHATTING, SEE YOU LATER ON BEATRIX."
+                },
+                new Sprite[]
+                {
+                    SRObjects.Get<Sprite>("viktor_bubble_point")
+                });
+
+            RancherChatMetadata.Entry[] endingConversation2 = exchangeDirector.CreateRancherChatConversation("viktor",
+                new string[]
+                {
+                    "GREAT JOB!",
+                },
+                new Sprite[]
+                {
+                    SRObjects.Get<Sprite>("viktor_bubble_work")
+                });
+
+
+            "Still working?".Log();
+
+            RancherChatMetadata rancherChatMetadataIntro2 = ScriptableObject.CreateInstance<RancherChatMetadata>();
+            rancherChatMetadataIntro2.entries = introConversation1;
+
+            "Damn, still working".Log();
+
+            RancherChatMetadata rancherChatMetadataRepeat2 = ScriptableObject.CreateInstance<RancherChatMetadata>();
+            rancherChatMetadataRepeat2.entries = repeatConversation2;
+
+            "Holy, is this really really still working?".Log();
+
+            rancherChatMetadataIntro2.entries = progressOfferEntry2.rancherChatEndIntro.entries.Concat(rancherChatMetadataIntro2.entries).ToArray();
+            progressOfferEntry2.rancherChatEndIntro.entries = endingConversation2;
+
+            "No fucking way".Log();
+
+            progressOfferEntry2.rewardLevels[4] = ExchangeCreator.CreateRewardLevel(
+                                        1,
+                                        rancherChatMetadataIntro2,
+                                        rancherChatMetadataRepeat2,
+                                        Identifiable.Id.BLUE_ECHO,
+                                        Ids.THERMAL_REGULATOR_REW
+                                      );
+
+            "Nope still not".Log();
+
+            exchangeDirector.nonIdentRewardDict.Add(
+                Ids.THERMAL_REGULATOR_REW,
+                assetBundle.LoadAsset<Sprite>("LiquidFire")
+            );
+            #endregion
+
+            #region SkippingViktorsDialogue
+            RancherChatMetadata.Entry[] Conversation3 = exchangeDirector.CreateRancherChatConversation("viktor",
+                new string[]
+                {
+                    "GREAT JOB!",
+                },
+                new Sprite[]
+                {
+                    SRObjects.Get<Sprite>("viktor_bubble_work")
+                });
+
+            RancherChatMetadata rancherChatMetadata3 = ScriptableObject.CreateInstance<RancherChatMetadata>();
+            rancherChatMetadata3.entries = Conversation3;
+
+            progressOfferEntry2.rewardLevels[0] = ExchangeCreator.CreateRewardLevel(
+                                        1,
+                                        rancherChatMetadata3,
+                                        rancherChatMetadata3,
+                                        Identifiable.Id.PINK_SLIME,
+                                        progressOfferEntry2.rewardLevels[0].reward
+                                      );
+            progressOfferEntry2.rewardLevels[1] = ExchangeCreator.CreateRewardLevel(
+                                        1,
+                                        rancherChatMetadata3,
+                                        rancherChatMetadata3,
+                                        Identifiable.Id.PINK_SLIME,
+                                        progressOfferEntry2.rewardLevels[0].reward
+                                      );
+            progressOfferEntry2.rewardLevels[2] = ExchangeCreator.CreateRewardLevel(
+                                        1,
+                                        rancherChatMetadata3,
+                                        rancherChatMetadata3,
+                                        Identifiable.Id.PINK_SLIME,
+                                        progressOfferEntry2.rewardLevels[0].reward
+                                      );
+            #endregion
+
+            #endregion
         }
 
 

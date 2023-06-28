@@ -13,43 +13,103 @@ using SRML;
 namespace Creators
 {
 
-/*	public class MoveTowardsCombinator : MonoBehaviour
-    {
-		public StartFusionProcess combinator;
-		public float speed;
-		public float limitDistance;
-		public bool liquidArrived;
-		void Start()
-        {
-			("Combinator is: " + combinator.name).Log();
-        }
-		void Update()
-        {
-			//"FirstUpdateLine".Log();
-			var step = speed * Time.deltaTime; // calculate distance to move
 
-			//"SecondUpdateLine".Log();
-			transform.position = Vector3.MoveTowards(transform.position, combinator.transform.position, step);
+	class ThermalRegulatorRegion : SRBehaviour
+	{
+		public List<GameObject> gameObjects = new List<GameObject>();
 
-			*//*"Following field is: ".Log();
-
-			combinator.GetType().GetField(valueToChangeAtEnd).Name.Log();*//*
-
-			//"Oh hey, no error over here".Log();
-
-			if (Vector3.Distance(transform.position, combinator.transform.position) < limitDistance) //0.001f
+		public void OnDisable()
+		{
+			foreach (GameObject _gameObject in gameObjects)
 			{
-				if(liquidArrived)
-					combinator.liquidArrived = true;
-				else
-					combinator.slimeArrived = true;
+				("Name is: " + _gameObject.name).Log();
+				if (_gameObject.GetComponent<Identifiable>().id == Ids.ELEMENTAL_FIRE_SLIME)
+				{
+					_gameObject.GetComponent<SlimeRandomMove>().scootSpeedFactor *= 3;
+					_gameObject.GetComponent<SlimeRandomMove>().verticalFactor *= 3;
+				}
+			}
+			gameObjects.Clear();
+		}
 
-				Destroy(gameObject);
+		public void OnTriggerEnter(Collider slime)
+		{
+			Identifiable.Id id;
+			"Something entered in ThermalRegulator".Log();
+			if (slime.gameObject.GetComponent<Identifiable>() != null)
+			{
+				id = slime.gameObject.GetComponent<Identifiable>().id;
+				
+				("Id is: " + id).Log();
+
+				if (id == Ids.ELEMENTAL_FIRE_SLIME)
+				{
+					slime.gameObject.GetComponent<SlimeRandomMove>().scootSpeedFactor /= 3;
+					slime.gameObject.GetComponent<SlimeRandomMove>().verticalFactor /= 3;
+				}
 			}
 		}
 
-    }
-*/
+		public void OnTriggerExit(Collider slime)
+		{
+			Identifiable.Id id;
+
+			"Something exited in ThermalRegulator".Log();
+
+			if (slime.gameObject.GetComponent<Identifiable>() != null)
+			{
+				id = slime.gameObject.GetComponent<Identifiable>().id;
+
+				("Id is: " + id).Log();
+
+				if (id == Ids.ELEMENTAL_FIRE_SLIME)
+				{
+					slime.gameObject.GetComponent<SlimeRandomMove>().scootSpeedFactor *= 3;
+					slime.gameObject.GetComponent<SlimeRandomMove>().verticalFactor *= 3;
+				}
+			}
+		}
+	}
+
+
+
+	/*	public class MoveTowardsCombinator : MonoBehaviour
+		{
+			public StartFusionProcess combinator;
+			public float speed;
+			public float limitDistance;
+			public bool liquidArrived;
+			void Start()
+			{
+				("Combinator is: " + combinator.name).Log();
+			}
+			void Update()
+			{
+				//"FirstUpdateLine".Log();
+				var step = speed * Time.deltaTime; // calculate distance to move
+
+				//"SecondUpdateLine".Log();
+				transform.position = Vector3.MoveTowards(transform.position, combinator.transform.position, step);
+
+				*//*"Following field is: ".Log();
+
+				combinator.GetType().GetField(valueToChangeAtEnd).Name.Log();*//*
+
+				//"Oh hey, no error over here".Log();
+
+				if (Vector3.Distance(transform.position, combinator.transform.position) < limitDistance) //0.001f
+				{
+					if(liquidArrived)
+						combinator.liquidArrived = true;
+					else
+						combinator.slimeArrived = true;
+
+					Destroy(gameObject);
+				}
+			}
+
+		}
+	*/
 	public class CrystalAbsorbElementalFire : MonoBehaviour
     {
 		int counter = 5;

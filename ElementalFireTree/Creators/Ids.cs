@@ -11,6 +11,8 @@ namespace ElementalFireTree
         public static readonly Identifiable.Id ELEMENTAL_FIRE_ENHANCER;
         public static readonly PlayerState.Upgrade FIRE_LIQUID_VAC;
         public static readonly ExchangeDirector.NonIdentReward FIRE_LIQUID_VAC_REW;
+        public static readonly ExchangeDirector.NonIdentReward THERMAL_REGULATOR_REW;
+        public static readonly LandPlot.Upgrade THERMAL_REGULATOR;
         public static readonly Vacuumable.LaunchSource NONE;
     }
 }

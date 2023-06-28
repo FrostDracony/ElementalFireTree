@@ -48,25 +48,42 @@ namespace Creators
             SlimeAppearance slimeAppearance = slimeObject.GetComponent<SlimeAppearanceApplicator>().Appearance;
 
             SlimeAppearanceStructure[] structures = slimeAppearance.Structures;
+            SlimeAppearanceStructure slimeAppearanceStructure = structures[0];
 
-            foreach (SlimeAppearanceStructure slimeAppearanceStructure in structures)
+            Material[] defaultMaterials = slimeAppearanceStructure.DefaultMaterials;
+            if (defaultMaterials != null && defaultMaterials.Length != 0)
+            {
+                 slimeAppearanceStructure.DefaultMaterials[0] = material;
+            }
+            /*int i = 0;
+            int i2 = 0;*/
+            for (int i = 0; i < structures[1].Element.Prefabs.Length; i++)
+            {
+                GameObject prefab = structures[1].Element.Prefabs[i].gameObject;
+                ("Currently at prefab: " + i).Log();
+                prefab.GetComponent<Renderer>().enabled = false;
+            }
+            /*foreach (Renderer rdr in structures[1].Element.Prefabs[0].GetComponentsInChildren<Renderer>())
+            {
+                rdr.enabled = false;
+            }*/
+            /*foreach (SlimeAppearanceStructure slimeAppearanceStructure in structures)
             {
                 Material[] defaultMaterials = slimeAppearanceStructure.DefaultMaterials;
                 if (defaultMaterials != null && defaultMaterials.Length != 0)
                 {
-                    /*material.SetColor("_TopColor", new Color32(190, 28, 255, 255));
+                    material.SetColor("_TopColor", new Color32(190, 28, 255, 255));
                     material.SetColor("_MiddleColor", new Color32(159, 28, 255, 255));
                     material.SetColor("_BottomColor", new Color32(120, 28, 255, 255));
                     material.SetColor("_SpecColor", new Color32(205, 28, 255, 255));
 
                     material.SetFloat(Shader.PropertyToID("_Gloss"), 3.5F);
                     material.SetFloat(Shader.PropertyToID("_GlossPower"), 6F);
-                    material.SetFloat(Shader.PropertyToID("_Shininess"), 2F);*/
+                    material.SetFloat(Shader.PropertyToID("_Shininess"), 2F);
 
                     slimeAppearanceStructure.DefaultMaterials[0] = material;
                 }
-
-            }
+            }*/
 
             SlimeExpressionFace[] expressionFaces = slimeAppearance.Face.ExpressionFaces;
             for (int k = 0; k < expressionFaces.Length; k++)
@@ -112,11 +129,14 @@ namespace Creators
 
             Object.Instantiate(particles, slimeObject.transform);
 
-            //slimeObject.GetComponent<SlimeRandomMove>().scootSpeedFactor *= 6;
-            //slimeObject.GetComponent<SlimeRandomMove>().verticalFactor *= 3;
-
+            slimeObject.GetComponent<SlimeRandomMove>().scootSpeedFactor *= 3;
+            slimeObject.GetComponent<SlimeRandomMove>().verticalFactor *= 3;
+            "Let me guess, the error is about to happen here?".Log();
             slimeObject.AddComponent<ChangeParticlesAngry>();
             //slimeObject.AddComponent<ChangeParticlesNormal>();
+
+            "Riiiight here".Log();
+            slimeObject.FindChild("RadSource(Clone)").GetComponent<RadSource>().radPerSecond = 50;
 
             //Object.Destroy(slimeObject.GetComponent(typeof(PinkSlimeFoodTypeTracker)));
 
