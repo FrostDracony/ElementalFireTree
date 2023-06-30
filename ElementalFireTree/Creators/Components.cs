@@ -27,6 +27,12 @@ namespace Creators
 				{
 					_gameObject.GetComponent<SlimeRandomMove>().scootSpeedFactor *= 3;
 					_gameObject.GetComponent<SlimeRandomMove>().verticalFactor *= 3;
+					_gameObject.GetComponent<DamagePlayerOnTouch>().damagePerTouch = 140;
+					_gameObject.AddComponent<ElementalFireSlimeIgnition>();
+
+					_gameObject.GetComponent<RadSlimeExpand>().enabled = true;
+
+					_gameObject.FindChild("RadSource(Clone)").SetActive(false);
 				}
 			}
 			gameObjects.Clear();
@@ -46,6 +52,12 @@ namespace Creators
 				{
 					slime.gameObject.GetComponent<SlimeRandomMove>().scootSpeedFactor /= 3;
 					slime.gameObject.GetComponent<SlimeRandomMove>().verticalFactor /= 3;
+					slime.gameObject.GetComponent<DamagePlayerOnTouch>().damagePerTouch = 10;
+					Destroy(slime.gameObject.GetComponent<ElementalFireSlimeIgnition>());
+
+					slime.gameObject.GetComponent<RadSlimeExpand>().enabled = false;
+
+					slime.gameObject.FindChild("RadSource(Clone)").SetActive(false);
 				}
 			}
 		}
@@ -66,6 +78,12 @@ namespace Creators
 				{
 					slime.gameObject.GetComponent<SlimeRandomMove>().scootSpeedFactor *= 3;
 					slime.gameObject.GetComponent<SlimeRandomMove>().verticalFactor *= 3;
+					slime.gameObject.GetComponent<DamagePlayerOnTouch>().damagePerTouch = 140;
+					slime.gameObject.AddComponent<ElementalFireSlimeIgnition>();
+					
+					slime.gameObject.GetComponent<RadSlimeExpand>().enabled = true;
+
+					slime.gameObject.FindChild("RadSource(Clone)").SetActive(true);
 				}
 			}
 		}

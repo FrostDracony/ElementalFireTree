@@ -17,21 +17,25 @@ namespace Creators
 
         public static void RegisterAllSlimePedia()
         {
-            new SlimePediaEntryTranslation(Ids.ELEMENTAL_FIRE_SLIMES)
-                .SetTitleTranslation("Elemental Fire Slimes")
-                .SetIntroTranslation("Lorem Ipsum")
-                .SetSlimeologyTranslation("Lorem Ipsum")
-                .SetPlortonomicsTranslation("Lorem Ipsum");
+            RegisterSlimePedia(Ids.ELEMENTAL_FIRE_SLIME_ENTRY, Ids.ELEMENTAL_FIRE_SLIME);
+            
+            new SlimePediaEntryTranslation(Ids.ELEMENTAL_FIRE_SLIME_ENTRY)
+                .SetTitleTranslation("Elemental Fire Slime")
+                .SetIntroTranslation("An dangerous slime with mysterious abilities, watch out because it's hot!")
+                .SetDietTranslation("Veggies")
+                .SetFavoriteTranslation("Fire Veggies")
+                .SetSlimeologyTranslation("This slime is really mysterious. It only eats veggies, probably because of it's composure and veggies in this area being more nutriant in minerals. It seems that it radiates some sort of energy, and when it gets angry it can shoot fireball! They seem to be made out of pure fire, such a slime was never be seen before, and by its form we can think it's one of... fire slimes? Who knows how many secrets we can learn from it and it's origins...")
+                .SetRisksTranslation("The radiation it causes are strong enough to destroy most organic things. It's surface seems incredibly hot, being able to disintegrate most food as soon as it they come in contact, so I would not try to touch it! Beware to make it angry, because it can form some powerful fireballs that can also cause you some big damage.")
+                .SetPlortonomicsTranslation("???");
 
-            PediaRegistry.SetPediaCategory(Ids.ELEMENTAL_FIRE_SLIMES, PediaRegistry.PediaCategory.SLIMES);
-
-            RegisterSlimePedia(Ids.ELEMENTAL_FIRE_SLIME);
             TranslationPatcher.AddActorTranslation("l." + Ids.ELEMENTAL_FIRE_SLIME.ToString().ToLower(), "Elemental Fire Slime");
         }
 
-        public static void RegisterSlimePedia(Identifiable.Id slimeId)
+        public static void RegisterSlimePedia(PediaDirector.Id pediaId, Identifiable.Id slimeId)
         {
-            PediaRegistry.RegisterIdentifiableMapping(Ids.ELEMENTAL_FIRE_SLIMES, slimeId);
+            PediaRegistry.RegisterIdentifiableMapping(pediaId, slimeId);
+            PediaRegistry.SetPediaCategory(pediaId, PediaRegistry.PediaCategory.SLIMES);
+            PediaRegistry.RegisterIdEntry(pediaId, Main.assetBundle.LoadAsset<Sprite>("ElementalFireSlime"));
         }
 
         public static void RegisterSlime((SlimeDefinition, GameObject) Tuple)

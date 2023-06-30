@@ -19,7 +19,7 @@ namespace ElementalFireTree.Patches
         public static bool Prefix(PlayerRadAbsorber __instance, GameObject source, float rads)
         {
             int healthLoss = __instance.playerState.AddRads(rads);
-            healthLoss = source.transform.parent.gameObject.GetComponent<Identifiable>().id == Ids.ELEMENTAL_FIRE_SLIME ? healthLoss*50 : healthLoss;
+            healthLoss = source.transform.parent.gameObject.GetComponent<Identifiable>().id == Ids.ELEMENTAL_FIRE_SLIME ? healthLoss*5 : healthLoss;
             if (healthLoss > 0 && __instance.damageable.Damage(healthLoss, null))
                 DeathHandler.Kill(__instance.gameObject, DeathHandler.Source.SLIME_RAD, source, "PlayerRadAbsorber.Absorb");
             __instance.absorbingThisFrame = true;

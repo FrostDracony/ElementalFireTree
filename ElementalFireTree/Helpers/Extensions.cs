@@ -17,6 +17,28 @@ namespace ElementalFireTree
         public static void Log(this string message) => console.Log(message);
         public static void Log(this object message) => console.Log(message);
 
+        public static RancherChatMetadata.Entry[] DeepCopy(this RancherChatMetadata.Entry[] array)
+        {
+            RancherChatMetadata.Entry[] otherArray = new RancherChatMetadata.Entry[array.Length];
+            int i = 0;
+            Array.ForEach(array, x =>
+            {
+                RancherChatMetadata.Entry newEntry = new RancherChatMetadata.Entry()
+                {
+                    messageBackground = x.messageBackground,
+                    messagePrefab = x.messagePrefab,
+                    messageText = x.messageText,
+                    rancherImage = x.rancherImage,
+                    rancherName = x.rancherName
+                };
+                
+                otherArray[i] = newEntry;
+                i++;
+            });
+
+            return otherArray;
+        }
+
         public static PersonalUpgradeTranslation GetTranslation(this PlayerState.Upgrade upgrade) => new PersonalUpgradeTranslation(upgrade);
 
         public static void PrintAllChildren(this GameObject gameObject)

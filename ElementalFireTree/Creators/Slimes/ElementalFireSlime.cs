@@ -57,17 +57,24 @@ namespace Creators
             }
             /*int i = 0;
             int i2 = 0;*/
-            for (int i = 0; i < structures[1].Element.Prefabs.Length; i++)
+            for (int i = 0; i < structures.Length; i++)
             {
-                GameObject prefab = structures[1].Element.Prefabs[i].gameObject;
-                ("Currently at prefab: " + i).Log();
+                if(i == 0)
+                    continue;
+                GameObject prefab = structures[i].Element.Prefabs[0].gameObject;
+                ("Currently at prefab: " + i + ", it being: " + prefab.name + " and other name: " + structures[i].Element).Log();
                 prefab.GetComponent<Renderer>().enabled = false;
             }
+
+            ("element of structure 2 is: " + structures[1].Element.Name).Log();
+            ("element of structure 2 is: " + structures[2].Element.Name).Log();
+            ("in total there are " + structures.Length + " strucutre elements").Log();
+            //structures[1].Element.Prefabs[0].
             /*foreach (Renderer rdr in structures[1].Element.Prefabs[0].GetComponentsInChildren<Renderer>())
             {
                 rdr.enabled = false;
             }*/
-            /*foreach (SlimeAppearanceStructure slimeAppearanceStructure in structures)
+            /*foreach (SlimeAppearanceStructure s[limeAppearanceStructure in structures)
             {
                 Material[] defaultMaterials = slimeAppearanceStructure.DefaultMaterials;
                 if (defaultMaterials != null && defaultMaterials.Length != 0)
@@ -136,8 +143,9 @@ namespace Creators
             //slimeObject.AddComponent<ChangeParticlesNormal>();
 
             "Riiiight here".Log();
-            slimeObject.FindChild("RadSource(Clone)").GetComponent<RadSource>().radPerSecond = 50;
-
+            slimeObject.FindChild("RadSource(Clone)").GetComponent<RadSource>().radPerSecond = 100;
+            /*Object.Destroy(slimeObject.FindChild("rad_aura_LOD0(Clone)", true));
+            Object.Destroy(slimeObject.FindChild("rad_core_LOD0(Clone)", true));*/
             //Object.Destroy(slimeObject.GetComponent(typeof(PinkSlimeFoodTypeTracker)));
 
             return (slimeDefinition, slimeObject);

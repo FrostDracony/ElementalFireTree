@@ -21,6 +21,9 @@ namespace Creators
         public static Dictionary<ExchangeDirector.OfferType, List<ExchangeDirector.RewardLevel>> moddedEntries = new Dictionary<ExchangeDirector.OfferType, List<ExchangeDirector.RewardLevel>>();
         public static Dictionary<ExchangeDirector.NonIdentReward, Sprite> moddedSpecRewardIcons = new Dictionary<ExchangeDirector.NonIdentReward, Sprite>();
 
+        //MyOwnStuff
+        public static bool isViktorQuestChanged = false;
+
         public static ExchangeDirector.RewardLevel CreateRewardLevel(int cnt, RancherChatMetadata intro, RancherChatMetadata repeat, Identifiable.Id item, ExchangeDirector.NonIdentReward rew)
         {
             return new ExchangeDirector.RewardLevel()
@@ -40,6 +43,11 @@ namespace Creators
                 return true;
             }
             return false;
+        }
+
+        public static void SetViktorsQuestToNormal()
+        {
+
         }
 
         public static RancherChatMetadata.Entry[] CreateRancherChatConversation(this ExchangeDirector exchangeDirector, string rancherId, string[] messages, Sprite[] sprites)
@@ -62,7 +70,7 @@ namespace Creators
             return entryToReturn.ToArray();
         }
 
-
+        //It's unused, so I don't know what you're hoping to find in this function
         public static void CreateRancherQuest(this ExchangeDirector exchangeDirector, ExchangeDirector.OfferType rancherOffer, int count, Identifiable.Id requestedItem,
             ExchangeDirector.NonIdentReward reward, RancherChatMetadata rancherChatMetadataRepeat, RancherChatMetadata rancherChatMetadataIntro, RancherChatMetadata.Entry[] messagesAtEndRepeat,
             RancherChatMetadata.Entry[] messagesAtEndIntro, Sprite spriteToRegister, bool finalQuest = false)

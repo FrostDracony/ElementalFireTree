@@ -11,6 +11,7 @@ using SRML.Utils;
 using UnityEngine;
 using Creators;
 using ElementalFireTree.Upgrades;
+using SRML.SR.Translation;
 
 namespace ElementalFireTree
 {
@@ -34,6 +35,23 @@ namespace ElementalFireTree
         {
             "PreLoad".Log();
 
+            /*foreach (KeyValuePair<ExchangeDirector.NonIdentReward, Sprite> entry in SRSingleton<SceneContext>.Instance.ExchangeDirector.nonIdentRewardDict)
+            {
+                ("\tkey: ").Log();
+                entry.Key.Log();
+                ("\tvalue: ").Log();
+                entry.Value.Log();
+            }*/
+
+            
+
+            PediaRegistry.RegisterIdentifiableMapping(Ids.ELEMENTAL_FIRE_SLIME_ENTRY, Ids.ELEMENTAL_FIRE_SLIME);
+            PediaRegistry.SetPediaCategory(Ids.ELEMENTAL_FIRE_SLIME_ENTRY, PediaRegistry.PediaCategory.SLIMES);
+
+            PediaRegistry.RegisterIdentifiableMapping(PediaDirector.Id.PLORTS, Ids.ELEMENTAL_FIRE_PLORT);
+            Identifiable.PLORT_CLASS.Add(Ids.ELEMENTAL_FIRE_PLORT);
+            Identifiable.NON_SLIMES_CLASS.Add(Ids.ELEMENTAL_FIRE_PLORT);
+            
             #region PLAYER'S_UPGRADE
             Ids.FIRE_LIQUID_VAC.GetTranslation().SetDescriptionTranslation("Useful to absorb the liquid fire from ancient fire storms").SetNameTranslation("Vaccable Liquid Fire Upgrade");
             
@@ -52,8 +70,23 @@ namespace ElementalFireTree
             #endregion
 
             Slimes.RegisterAllSlimePedia();
+
+            new ResourcePediaEntryTranslation(Ids.ELEMENTAL_FIRE_ENHANCER_ENTRY)
+                .SetDescriptionTranslation("Created after infusing it with fire liquid, it seems as if it was red, shining by the power of fire itself.")
+                .SetTitleTranslation("Elemental Fire Enhancer")
+                .SetIntroTranslation("A variant of strange diamond.")
+                .SetResourceTypeTranslation("???")
+                .SetFavoredByTranslation("(not slime food)")
+                .SetFavoredByLabelTranslation("(not slime food)")
+                .SetHowToUseTranslation("It seems as if it would resonate with an object and another droplet of fire liquid...");
+
+            PediaRegistry.RegisterIdentifiableMapping(Ids.ELEMENTAL_FIRE_ENHANCER_ENTRY, Ids.ELEMENTAL_FIRE_ENHANCER);
+            PediaRegistry.SetPediaCategory(Ids.ELEMENTAL_FIRE_ENHANCER_ENTRY, PediaRegistry.PediaCategory.RESOURCES);
+            PediaRegistry.RegisterIdEntry(Ids.ELEMENTAL_FIRE_ENHANCER_ENTRY, SRObjects.Get<Sprite>("iconCraftStrangeDiamond"));
+            
             LandPlotUpgradeRegistry.RegisterPurchasableUpgrade<CorralUI>(ThermalRegulator.CreateThermalRegulatorEntry());
             LandPlotUpgradeRegistry.RegisterPlotUpgrader<ThermalRegulator>(LandPlot.Id.CORRAL);
+
             HarmonyInstance.PatchAll();
         }
 
@@ -64,6 +97,9 @@ namespace ElementalFireTree
         {
             "Load".Log();
 
+            
+
+            Plorts.RegisterAllPlorts();
 
             GameObject testObject = SRSingleton<GameContext>.Instance.LookupDirector.GetPrefab(Identifiable.Id.STRANGE_DIAMOND_CRAFT).CreatePrefabCopy();
             testObject.GetComponent<Identifiable>().id = Ids.ELEMENTAL_FIRE_ENHANCER;
@@ -87,6 +123,35 @@ namespace ElementalFireTree
             {
                 rdr.enabled = false;
             }
+            
+            
+            
+            //SRSingleton<SceneContext>.Instance.PediaDirector.IsUnlocked(Ids.ELEMENTAL_FIRE_SLIME_ENTRY).Log();
+
+
+
+            GameObject fireQuad = PrefabUtils.CopyPrefab(SRSingleton<GameContext>.Instance.LookupDirector.GetPrefab(Identifiable.Id.FIRE_PLORT).FindChild("FireQuad"));
+            fireQuad.transform.localScale = new Vector3(4.5f, 4.5f, 4.5f);
+
+            //SRObjects.Get<Shader>("SR/Actor/Recolor x8").PrintContent();
+            testObject.FindChild("strangeDiamond_ld").GetComponent<MeshRenderer>().material.SetColor("_Color00", Color.red);
+            testObject.FindChild("strangeDiamond_ld").GetComponent<MeshRenderer>().material.SetColor("_Color01", Color.red);
+            testObject.FindChild("strangeDiamond_ld").GetComponent<MeshRenderer>().material.SetColor("_Color10", Color.red);
+            testObject.FindChild("strangeDiamond_ld").GetComponent<MeshRenderer>().material.SetColor("_Color11", Color.red);
+            testObject.FindChild("strangeDiamond_ld").GetComponent<MeshRenderer>().material.SetColor("_Color20", Color.red);
+            testObject.FindChild("strangeDiamond_ld").GetComponent<MeshRenderer>().material.SetColor("_Color21", Color.red);
+            testObject.FindChild("strangeDiamond_ld").GetComponent<MeshRenderer>().material.SetColor("_Color30", Color.red);
+            testObject.FindChild("strangeDiamond_ld").GetComponent<MeshRenderer>().material.SetColor("_Color31", Color.red);
+            testObject.FindChild("strangeDiamond_ld").GetComponent<MeshRenderer>().material.SetColor("_Color40", Color.red);
+            testObject.FindChild("strangeDiamond_ld").GetComponent<MeshRenderer>().material.SetColor("_Color41", Color.red);
+            testObject.FindChild("strangeDiamond_ld").GetComponent<MeshRenderer>().material.SetColor("_Color50", Color.red);
+            testObject.FindChild("strangeDiamond_ld").GetComponent<MeshRenderer>().material.SetColor("_Color51", Color.red);
+            testObject.FindChild("strangeDiamond_ld").GetComponent<MeshRenderer>().material.SetColor("_Color60", Color.red);
+            testObject.FindChild("strangeDiamond_ld").GetComponent<MeshRenderer>().material.SetColor("_Color61", Color.red);
+            testObject.FindChild("strangeDiamond_ld").GetComponent<MeshRenderer>().material.SetColor("_Color70", Color.red);
+            testObject.FindChild("strangeDiamond_ld").GetComponent<MeshRenderer>().material.SetColor("_Color71", Color.red);
+            testObject.FindChild("strangeDiamond_ld").GetComponent<MeshRenderer>().material.SetColor("_Color01", Color.red);
+
             /*foreach (SphereCollider coll in radiusBall.GetComponentsInChildren<SphereCollider>())
             {
                 coll.enabled = true;
@@ -107,6 +172,7 @@ namespace ElementalFireTree
             
             LookupRegistry.RegisterIdentifiablePrefab(testObject);
             AmmoRegistry.RegisterAmmoPrefab(PlayerState.AmmoMode.DEFAULT, testObject);
+
             Sprite icon = SRSingleton<SceneContext>.Instance.PediaDirector.entries.First((PediaDirector.IdEntry x) => x.id == PediaDirector.Id.ORNAMENTS).icon;
             LookupRegistry.RegisterVacEntry(Ids.ELEMENTAL_FIRE_ENHANCER, new Color32(138, 87, 40, 255), icon);
             
@@ -141,19 +207,30 @@ namespace ElementalFireTree
         public override void PostLoad()
         {
             "PostLoad".Log();
+
+            SRSingleton<SceneContext>.Instance.ExchangeDirector.nonIdentRewardDict.Add(
+                Ids.FIRE_LIQUID_VAC_REW,
+                assetBundle.LoadAsset<Sprite>("FireUpgrade")
+            );
+
+            SRSingleton<SceneContext>.Instance.ExchangeDirector.nonIdentRewardDict.Add(
+                Ids.THERMAL_REGULATOR_REW,
+                assetBundle.LoadAsset<Sprite>("LiquidFire")
+            );
+
             SRCallbacks.OnSaveGameLoaded += SRCallbacks_OnSaveGameLoaded;
 
             SRCallbacks.OnSaveGameLoaded += (SceneContext t) => {
                 //Updating our personal zonetracker variable as soon as the game is loaded
                 playerIsInDesert = t.PlayerZoneTracker.GetCurrentZone() == ZoneDirector.Zone.DESERT;
-                ("Player is in:" + playerIsInDesert).Log();
+                //("Player is in:" + playerIsInDesert).Log();
             };
 
 
             SRCallbacks.OnZoneEntered += (ZoneDirector.Zone zone, PlayerState playerState) =>
             {
                 playerIsInDesert = zone == ZoneDirector.Zone.DESERT;
-                ("Player is in:" + playerIsInDesert).Log();
+                //("Player is in:" + playerIsInDesert).Log();
             };
 
             /*GameObject fireSlime = SRSingleton<GameContext>.Instance.LookupDirector.GetPrefab(Identifiable.Id.FIRE_SLIME);
@@ -199,8 +276,6 @@ namespace ElementalFireTree
         void SRCallbacks_OnSaveGameLoaded(SceneContext t)
         {
             ExchangeDirector exchangeDirector = SRSingleton<SceneContext>.Instance.ExchangeDirector;
-            ExchangeDirector.ProgressOfferEntry progressOfferEntry2 = exchangeDirector.progressOffers[2];
-            Array.Resize(ref progressOfferEntry2.rewardLevels, progressOfferEntry2.rewardLevels.Length + 2);
 
             #region Changing Mochi's RewardLevels
             /*int i = 0;
@@ -304,26 +379,200 @@ namespace ElementalFireTree
             "huh it worked until here?".Log();
 
             #region Conversations
+            ExchangeDirector.ProgressOfferEntry progressOfferEntry2 = exchangeDirector.progressOffers[2];
+            RancherChatMetadata.Entry[] OGEndIntro = progressOfferEntry2.rancherChatEndIntro.entries.DeepCopy();
+            //https://www.youtube.com/watch?v=DNM0WhKFmm8
             #region FirstConvo
             RancherChatMetadata.Entry[] introConversation1 = exchangeDirector.CreateRancherChatConversation("viktor",
+                new string[]
+                {
+                    "Oh, actually, before you leave Beatrix",
+                    "There's something important I have to tell you. Do you have a minute?",
+                    "I have been seeing some... distubations in the glass deserts.",
+                    "Like, a huge amount of energy is being released during each firestorm.",
+                    "But I really cannot afford to leave my research behind in this moment.",
+                    "Would... it be possible for you to maybe check it out on my behalf?",
+                    "If there truly is this amount of energy, then bring me back some plorts of fire slimes. They must be linked to all of this somehow",
+                    "Thank you Beatrix, hope to hear back from you soon.",
+                },
+                new Sprite[]
+                {
+                    SRObjects.Get<Sprite>("viktor_greeting"),
+                    SRObjects.Get<Sprite>("viktor_explain"),
+                    SRObjects.Get<Sprite>("viktor_confused"),
+                    SRObjects.Get<Sprite>("viktor_work"),
+                    SRObjects.Get<Sprite>("viktor_sad"),
+                    SRObjects.Get<Sprite>("viktor_uneasy"),
+                    SRObjects.Get<Sprite>("viktor_thinking"),
+                    SRObjects.Get<Sprite>("viktor_default2")
+                }
+            );
+
+            /*
+             * All the Images:
+             * viktor_greeting
+             * viktor_happy
+             * viktor_default2
+             * viktor_explain
+             * viktor_thinking
+             * viktor_bubble_work 
+             * viktor_bubble_surprise
+             * viktor_debubbling
+             * viktor_confused
+             * viktor_eureka
+             * viktor_sad
+             * viktor_work
+             * viktor_uneasy
+             * viktor_guilty
+             * viktor_static
+             * viktor_bubble_point
+             * viktor_speechless
+             * viktor_looking_down
+            */
+
+            RancherChatMetadata.Entry[] repeatConversation1 = exchangeDirector.CreateRancherChatConversation("viktor",
+                new string[]
+                {
+                    "OH, HELLO BEATRIX",
+                    "AS YOU CAN SEE, I AM IN THE MIDDLE OF A VERY IMPORTANT EXPERIMENT RIGHT NOW",
+                    "COULD YOU PLEASE COME BACK ONCE YOU ARE DONE WITH COLLECTING THE SAMPLES? BY THEN I SHOULD BE DONE TOO.",
+                    "SORRY AGAIN THAT I FORGOT TO WARN YOU, BUT FIRE SLIME PLORTS GET PRETTY INSTABLE WHILE I ANALYZE THEM, SO I NEED A HUGE AMOUNT OF THEM",
+                    "YOU CAN TAKE YOUR TIME WITH IT, IN THE MEANWHILE, I WILL JUST TRY TO FIGURE OUT ON MY OWN WHAT'S HAPPENING, HOPE SEE YOU SOON!",
+                },
+                new Sprite[]
+                {
+                    SRObjects.Get<Sprite>("viktor_bubble_surprise"),
+                    SRObjects.Get<Sprite>("viktor_bubble_work"),
+                    SRObjects.Get<Sprite>("viktor_bubble_work"),
+                    SRObjects.Get<Sprite>("viktor_bubble_surprise"),
+                    SRObjects.Get<Sprite>("viktor_bubble_point")
+                }
+            );
+            
+
+            RancherChatMetadata.Entry[] endingConversation1 = exchangeDirector.CreateRancherChatConversation("viktor",
+                new string[]
+                {
+                    "What a wonderful job you completed there!",
+                    "So, it appears that...",
+                    "...",
+                    "Listen, I know that it will appear strange, but I can not get any valuable information out of these plorts",
+                    "Well, no information about what is happening over in the glass desert.",
+                    "Nothing new other than giant, dangerous fire storms, and what appears to be... liquified fire?",
+                    "The other only thing I was able to identify is that the DNA of the fire slimes seems to be... changing?",
+                    "But only of some, not of everyone one.",
+                    "I wonder what it means...",
+                    "But hey, since I was never before able to get this many fire plorts, I was able to build this thingy",
+                    "An upgrade that should allow you to get a hold of these special liquified fire. I was able to get some samples of the strange material for my own experiments.",
+                    "That's why I do not have an use for it at the moment, other than use it to clean my strange diamonds",
+                    "What, why are you looking at me with that bizzare expression? By applying small quantities of it, it can remove nearly everything on it's surface, and it makes it look as clean as ever!",
+                    "I do admit that it then looks a bit... more red than usual? But it then returns back to it's original colors, so I assume it's just the crystal warming up.",
+                    "If you want tho, you can play around with it I guess, maybe just try to not make it too hot.",
+                    "Alright, enough chatting-",
+                    "IF YOU WILL EXCUSE ME, I HAVE SOME EXPERIMENTS TO RUN, FEEL FREE TO CALL ME IF YOU FIND SOMETHING, I WISH YOU A WONDERFUL DAY MY FRIEND",
+                },
+                new Sprite[]
+                {
+                    SRObjects.Get<Sprite>("viktor_greeting"),
+                    SRObjects.Get<Sprite>("viktor_explaining"),
+                    SRObjects.Get<Sprite>("viktor_default2"),
+                    SRObjects.Get<Sprite>("viktor_default2"),
+                    SRObjects.Get<Sprite>("viktor_eureka"),
+                    SRObjects.Get<Sprite>("viktor_confused"),
+                    SRObjects.Get<Sprite>("viktor_happy"),
+                    SRObjects.Get<Sprite>("viktor_sad"),
+                    SRObjects.Get<Sprite>("viktor_uneasy"),
+                    SRObjects.Get<Sprite>("viktor_explain"),
+                    SRObjects.Get<Sprite>("viktor_speechless"),
+                    SRObjects.Get<Sprite>("viktor_eureka"),
+                    SRObjects.Get<Sprite>("viktor_thinking"),
+                    SRObjects.Get<Sprite>("viktor_default2"),
+                    SRObjects.Get<Sprite>("viktor_work"),
+                    SRObjects.Get<Sprite>("viktor_debubbling"),
+                    SRObjects.Get<Sprite>("viktor_bubble_work")
+                }
+            );
+            
+            
+            "Still working?".Log();
+
+            RancherChatMetadata rancherChatMetadataIntro1 = ScriptableObject.CreateInstance<RancherChatMetadata>();
+            rancherChatMetadataIntro1.entries = introConversation1;
+
+            "Damn, still working".Log();
+
+            RancherChatMetadata rancherChatMetadataRepeat1 = ScriptableObject.CreateInstance<RancherChatMetadata>();
+            rancherChatMetadataRepeat1.entries = repeatConversation1;
+
+            /*"Holy, is this really really still working?".Log();
+
+
+            int debugIndex1 = 0;
+
+            "".Log();
+            "For rewardLevel 3, the repeattext is:".Log();
+            ("It's length: " + progressOfferEntry2.rewardLevels.Length).Log();
+            ("And it has a length of: " + progressOfferEntry2.rewardLevels[progressOfferEntry2.rewardLevels.Length-1].rancherChatRepeat.entries.Length).Log();
+            Array.ForEach(progressOfferEntry2.rewardLevels[progressOfferEntry2.rewardLevels.Length-1].rancherChatRepeat.entries,
+                x =>
+                {
+                    ("      " + SRSingleton<GameContext>.Instance.MessageDirector.GetBundle("exchange").Get(x.messageText) + " at index: " + debugIndex1 + " and image " + x.rancherImage).Log();
+                    debugIndex1++;
+                }
+            );
+
+            debugIndex1 = 0;
+
+            "For final, the text is:".Log();
+            Array.ForEach(progressOfferEntry2.rancherChatEndIntro.entries,
+                x =>
+                {
+                    ("      " + SRSingleton<GameContext>.Instance.MessageDirector.GetBundle("exchange").Get(x.messageText) + " at index: " + debugIndex1 + " and image " + x.rancherImage).Log();
+                    debugIndex1++;
+                }
+            );*/
+
+            Array.Resize(ref progressOfferEntry2.rewardLevels, progressOfferEntry2.rewardLevels.Length + 2);
+
+            rancherChatMetadataIntro1.entries = OGEndIntro.Concat(rancherChatMetadataIntro1.entries).ToArray();
+            progressOfferEntry2.rancherChatEndIntro.entries = OGEndIntro;
+
+            "No fucking way".Log();
+
+            progressOfferEntry2.rewardLevels[3] = ExchangeCreator.CreateRewardLevel(
+                                        750,
+                                        rancherChatMetadataIntro1,
+                                        rancherChatMetadataRepeat1,
+                                        Identifiable.Id.FIRE_PLORT,
+                                        Ids.FIRE_LIQUID_VAC_REW
+                                      );
+
+            "Nope still not".Log();
+
+            
+            #endregion
+
+            #region SecondConvo
+            //Hmm
+            RancherChatMetadata.Entry[] introConversation2 = exchangeDirector.CreateRancherChatConversation("viktor",
                 new string[]
                 {
                     "SO, NOW ALL I NEED TO DO IS-",
                     "UH, A CALL INCOMING?",
                     "GIVE ME A SECOND-",
-                    "Oh, hello Beatrix! Glad to see you are back! I wonder what brings you here?",
-                    "There should not be any other problems with the Slimeulation, not any I know...",
-                    "Oh, a new sort of slime?",
+                    "Oh, hello Beatrix! Glad to see you are back! I wonder what brings you here this time?",
+                    "There should not be any other problems with the Slimeulation, not any I know, and I am still analyzing the samples you brought me ...",
+                    "Oh, you discovered a new sort of slime? Mind you tell me how it looks, but most importantly, how?",
                     "Hmm...",
                     "...",
                     "...",
                     "b...",
-                    "B R I L I A N T!!!",
-                    "I seriously cannot wait any longer to analyze it!",
-                    "Being able to manipulate fire... may they be long lost relatives to the fire slimes?",
-                    "Enough chit-chat, give me some plorts of this slime",
-                    "The faster I get the plorts, the faster I get to add them to the Slimeulation",
-                    "... and I guess give you more informations on how to handle it's problematic thermal radiation too... of course",
+                    "B R I L I A N T!!! I never thought of using warmed up diamonds in such a way!",
+                    "I seriously cannot wait any longer to analyze it, just wish you told me earlier about this!",
+                    "Made out of what appears to be pure fire... may they be long lost relatives to the fire slimes?",
+                    "Enough chit-chat, give me some plorts of this slime as well.",
+                    "The faster I get the plorts, the faster I get to add them to the Slimeulation.",
+                    "... and I guess give you more informations on how to handle it's... problematic thermal radiation you said? Yeah, that too... of course.",
                     "Well-",
                     "UNTIL THEN, I WILL PREPARE MY SLIMEULATION TO WELCOME THE NEW SLIMES, HOPE TO SEE YOU SOON!",
                     },
@@ -347,16 +596,17 @@ namespace ElementalFireTree
                     SRObjects.Get<Sprite>("viktor_speechless"),
                     SRObjects.Get<Sprite>("viktor_debubbling"),
                     SRObjects.Get<Sprite>("viktor_bubble_point")
-                });
+                }
+            );
 
-            /*
-             * All the Images:
-             * viktor_greeting
+
+            /**All the Images:
+             *viktor_greeting
              * viktor_happy
              * viktor_default2
              * viktor_explain
              * viktor_thinking
-             * viktor_bubble_work 
+             * viktor_bubble_work
              * viktor_bubble_surprise
              * viktor_debubbling
              * viktor_confused
@@ -367,10 +617,11 @@ namespace ElementalFireTree
              * viktor_guilty
              * viktor_static
              * viktor_bubble_point
-             * viktor_speechless
-            */
+             * viktor_speechless*/
 
-            RancherChatMetadata.Entry[] repeatConversation1 = exchangeDirector.CreateRancherChatConversation("viktor",
+
+
+            RancherChatMetadata.Entry[] repeatConversation2 = exchangeDirector.CreateRancherChatConversation("viktor",
                 new string[]
                 {
                     "Oh, checking on any progress?",
@@ -398,9 +649,10 @@ namespace ElementalFireTree
                     SRObjects.Get<Sprite>("viktor_thinking"),
                     SRObjects.Get<Sprite>("viktor_debubbling"),
                     SRObjects.Get<Sprite>("viktor_bubble_point")
-                });
+                }
+            );
 
-            RancherChatMetadata.Entry[] endingConversation1 = exchangeDirector.CreateRancherChatConversation("viktor",
+            RancherChatMetadata.Entry[] endingConversation2 = exchangeDirector.CreateRancherChatConversation("viktor",
                 new string[]
                 {
                     "GREAT JOB!",
@@ -419,8 +671,8 @@ namespace ElementalFireTree
                     "I still don't know how she managed to find the solution.",
                     "But as long as I get my cup of coffee in the morning while listening to some jazz, I will not question it.",
                     "Anyways, still feel free to enter my Slimeulation and gather more bug reports.",
-                    "Now-",
-                    "IF YOU WILL EXCUSE ME, I HAVE SOME EXPERIMENTS TO RUN, I WISH YOU A WONDERFUL DAY MY FRIEND",
+                    /*"Now-",
+                    "IF YOU WILL EXCUSE ME, I HAVE SOME EXPERIMENTS TO RUN, I WISH YOU A WONDERFUL DAY MY FRIEND",*/
                 },
                 new Sprite[]
                 {
@@ -440,102 +692,16 @@ namespace ElementalFireTree
                     SRObjects.Get<Sprite>("viktor_thinking"),
                     SRObjects.Get<Sprite>("viktor_default2"),
                     SRObjects.Get<Sprite>("viktor_work"),
-                    SRObjects.Get<Sprite>("viktor_debubbling"),
-                    SRObjects.Get<Sprite>("viktor_bubble_work")
-                });
-            
-            
-            "Still working?".Log();
-
-            RancherChatMetadata rancherChatMetadataIntro1 = ScriptableObject.CreateInstance<RancherChatMetadata>();
-            rancherChatMetadataIntro1.entries = introConversation1;
-
-            "Damn, still working".Log();
-
-            RancherChatMetadata rancherChatMetadataRepeat1 = ScriptableObject.CreateInstance<RancherChatMetadata>();
-            rancherChatMetadataRepeat1.entries = repeatConversation1;
-
-            "Holy, is this really really still working?".Log();
-
-            rancherChatMetadataIntro1.entries = progressOfferEntry2.rancherChatEndIntro.entries.Concat(rancherChatMetadataIntro1.entries).ToArray();
-            progressOfferEntry2.rancherChatEndIntro.entries = endingConversation1;
-
-            "No fucking way".Log();
-
-            progressOfferEntry2.rewardLevels[3] = ExchangeCreator.CreateRewardLevel(
-                                        1,
-                                        rancherChatMetadataIntro1,
-                                        rancherChatMetadataRepeat1,
-                                        Identifiable.Id.BLUE_ECHO,
-                                        Ids.FIRE_LIQUID_VAC_REW
-                                      );
-
-            "Nope still not".Log();
-
-            exchangeDirector.nonIdentRewardDict.Add(
-                Ids.FIRE_LIQUID_VAC_REW,
-                assetBundle.LoadAsset<Sprite>("FireUpgrade")
-            );
-            #endregion
-
-            #region SecondConvo
-            RancherChatMetadata.Entry[] introConversation2 = exchangeDirector.CreateRancherChatConversation("viktor",
-                new string[]
-                {
-                    "UNTIL THEN, I WILL PREPARE MY SLIMEULATION TO WELCOME THE NEW SLIMES, HOPE TO SEE YOU SOON!",
-                },
-                new Sprite[]
-                {
-                    SRObjects.Get<Sprite>("viktor_bubble_point")
+                    /*SRObjects.Get<Sprite>("viktor_debubbling"),
+                    SRObjects.Get<Sprite>("viktor_bubble_work")*/
                 }
             );
-
-            /*
-             * All the Images:
-             * viktor_greeting
-             * viktor_happy
-             * viktor_default2
-             * viktor_explain
-             * viktor_thinking
-             * viktor_bubble_work 
-             * viktor_bubble_surprise
-             * viktor_debubbling
-             * viktor_confused
-             * viktor_eureka
-             * viktor_sad
-             * viktor_work
-             * viktor_uneasy
-             * viktor_guilty
-             * viktor_static
-             * viktor_bubble_point
-             * viktor_speechless
-            */
-
-            RancherChatMetadata.Entry[] repeatConversation2 = exchangeDirector.CreateRancherChatConversation("viktor",
-                new string[]
-                {
-                    "ENOUGH CHATTING, SEE YOU LATER ON BEATRIX."
-                },
-                new Sprite[]
-                {
-                    SRObjects.Get<Sprite>("viktor_bubble_point")
-                });
-
-            RancherChatMetadata.Entry[] endingConversation2 = exchangeDirector.CreateRancherChatConversation("viktor",
-                new string[]
-                {
-                    "GREAT JOB!",
-                },
-                new Sprite[]
-                {
-                    SRObjects.Get<Sprite>("viktor_bubble_work")
-                });
 
 
             "Still working?".Log();
 
             RancherChatMetadata rancherChatMetadataIntro2 = ScriptableObject.CreateInstance<RancherChatMetadata>();
-            rancherChatMetadataIntro2.entries = introConversation1;
+            rancherChatMetadataIntro2.entries = introConversation2;
 
             "Damn, still working".Log();
 
@@ -544,25 +710,22 @@ namespace ElementalFireTree
 
             "Holy, is this really really still working?".Log();
 
-            rancherChatMetadataIntro2.entries = progressOfferEntry2.rancherChatEndIntro.entries.Concat(rancherChatMetadataIntro2.entries).ToArray();
+            rancherChatMetadataIntro2.entries = rancherChatMetadataIntro2.entries.ToArray();
             progressOfferEntry2.rancherChatEndIntro.entries = endingConversation2;
 
             "No fucking way".Log();
 
             progressOfferEntry2.rewardLevels[4] = ExchangeCreator.CreateRewardLevel(
-                                        1,
+                                        25,
                                         rancherChatMetadataIntro2,
                                         rancherChatMetadataRepeat2,
-                                        Identifiable.Id.BLUE_ECHO,
+                                        Ids.ELEMENTAL_FIRE_PLORT,
                                         Ids.THERMAL_REGULATOR_REW
                                       );
 
             "Nope still not".Log();
 
-            exchangeDirector.nonIdentRewardDict.Add(
-                Ids.THERMAL_REGULATOR_REW,
-                assetBundle.LoadAsset<Sprite>("LiquidFire")
-            );
+            
             #endregion
 
             #region SkippingViktorsDialogue
