@@ -97,7 +97,7 @@ namespace ElementalFireTree.Patches
     [HarmonyPatch(typeof(ExchangeDirector), "MaybeStartNext")]
     class DebugPatches5_2
     {
-        public static bool Prefix(ExchangeDirector __instance, ExchangeDirector.OfferType offerType)
+        public static bool Prefix(ExchangeDirector __instance, ExchangeDirector.OfferType offerType, ref bool __result)
         {
             if (__instance.worldModel.currOffers.ContainsKey(offerType))
                 return false;
@@ -105,18 +105,61 @@ namespace ElementalFireTree.Patches
             if (progressEntry == null || __instance.worldModel.currOffers.ContainsKey(progressEntry.specialOfferType) || __instance.progressDir.GetProgress(progressEntry.progressType) >= progressEntry.rewardLevels.Length)
                 return false;
 
-            ("CreateProgressOffer is at: " + __instance.progressDir.GetProgress(ProgressDirector.ProgressType.VIKTOR_REWARDS) + " with a length of: " + __instance.GetProgressEntry(offerType).rewardLevels.Length + " Kek").Log();
 
             if (offerType == ExchangeDirector.OfferType.VIKTOR && __instance.progressDir.GetProgress(ProgressDirector.ProgressType.VIKTOR_REWARDS) == 4  && !__instance.pediaDir.IsUnlocked(Ids.ELEMENTAL_FIRE_SLIME_ENTRY))
             {
                 if(ExchangeCreator.isViktorQuestChanged)
                 {
-                    "No need to rechange the quest again, just play the UI".Log();
-                    __instance.CreateRancherChatUI(offerType, true);
+                    __instance.CreateRancherChatUI(offerType, false);
+                    __result = true;
                     return false;
                 }
 
                 RancherChatMetadata.Entry[] introConversation1 = __instance.CreateRancherChatConversation("viktor",
+                    new string[]
+                {
+                    "What a wonderful job you completed there!",
+                    "So, it appears that...",
+                    "...",
+                    "Listen, I know that it will appear strange, but I can not get any valuable information out of these plorts",
+                    "Well, no information about what is happening over in the glass desert.",
+                    "Nothing new other than giant, dangerous fire storms, and what appears to be... liquified fire?",
+                    "The other only thing I was able to identify is that the DNA of the fire slimes seems to be... changing?",
+                    "But only of some, not of everyone one.",
+                    "I wonder what it means...",
+                    "But hey, since I was never before able to get this many fire plorts, I was able to build this thingy",
+                    "An upgrade that should allow you to get a hold of these special liquified fire. I was able to get some samples of the strange material for my own experiments.",
+                    "That's why I do not have an use for it at the moment, other than use it to clean my strange diamonds",
+                    "What, why are you looking at me with that bizzare expression? By applying small quantities of it, it can remove nearly everything on it's surface, and it makes it look as clean as ever!",
+                    "I do admit that it then looks a bit... more red than usual? But it then returns back to it's original colors, so I assume it's just the crystal warming up.",
+                    "If you want tho, you can play around with it I guess, maybe just try to not make it too hot.",
+                    "Alright, enough chatting-",
+                    "IF YOU WILL EXCUSE ME, I HAVE SOME EXPERIMENTS TO RUN, FEEL FREE TO CALL ME IF YOU FIND SOMETHING, I WISH YOU A WONDERFUL DAY MY FRIEND",
+                },
+                    new Sprite[]
+                {
+                    SRObjects.Get<Sprite>("viktor_greeting"),
+                    SRObjects.Get<Sprite>("viktor_explain"),
+                    SRObjects.Get<Sprite>("viktor_default2"),
+                    SRObjects.Get<Sprite>("viktor_default2"),
+                    SRObjects.Get<Sprite>("viktor_eureka"),
+                    SRObjects.Get<Sprite>("viktor_confused"),
+                    SRObjects.Get<Sprite>("viktor_happy"),
+                    SRObjects.Get<Sprite>("viktor_sad"),
+                    SRObjects.Get<Sprite>("viktor_uneasy"),
+                    SRObjects.Get<Sprite>("viktor_explain"),
+                    SRObjects.Get<Sprite>("viktor_speechless"),
+                    SRObjects.Get<Sprite>("viktor_eureka"),
+                    SRObjects.Get<Sprite>("viktor_thinking"),
+                    SRObjects.Get<Sprite>("viktor_default2"),
+                    SRObjects.Get<Sprite>("viktor_work"),
+                    SRObjects.Get<Sprite>("viktor_debubbling"),
+                    SRObjects.Get<Sprite>("viktor_bubble_work")
+                },
+                    "intro",10
+                );
+
+                RancherChatMetadata.Entry[] repeatConversation1 = __instance.CreateRancherChatConversation("viktor",
                     new string[]
                     {
                         "Huh, Beatrix?",
@@ -140,30 +183,14 @@ namespace ElementalFireTree.Patches
                         SRObjects.Get<Sprite>("viktor_default2"),
                         SRObjects.Get<Sprite>("viktor_greeting"),
                         SRObjects.Get<Sprite>("viktor_default2")
-                    }
-                );
-
-                RancherChatMetadata.Entry[] repeatConversation1 = __instance.CreateRancherChatConversation("viktor",
-                    new string[]
-                    {
-                    "OH, HELLO BEATRIX",
-                    "AS YOU CAN SEE, I AM IN THE MIDDLE OF A VERY IMPORTANT EXPERIMENT RIGHT NOW",
-                    "COULD YOU PLEASE COME BACK LATER ON?. SEE YOU SOON!",
                     },
-                    new Sprite[]
-                    {
-                    SRObjects.Get<Sprite>("viktor_bubble_surprise"),
-                    SRObjects.Get<Sprite>("viktor_bubble_work"),
-                    SRObjects.Get<Sprite>("viktor_bubble_point")
-                    }
+                    "intro",10
                 );
 
-                "Still working?".Log();
 
                 RancherChatMetadata rancherChatMetadataIntro1 = ScriptableObject.CreateInstance<RancherChatMetadata>();
                 rancherChatMetadataIntro1.entries = introConversation1;
 
-                "Damn, still working".Log();
 
                 RancherChatMetadata rancherChatMetadataRepeat1 = ScriptableObject.CreateInstance<RancherChatMetadata>();
                 rancherChatMetadataRepeat1.entries = repeatConversation1;
@@ -175,10 +202,16 @@ namespace ElementalFireTree.Patches
                                         Ids.ELEMENTAL_FIRE_PLORT,
                                         Ids.THERMAL_REGULATOR_REW
                                       );
-                "Ok, why are you playing twice?".Log();
                 __instance.CreateRancherChatUI(offerType, true);
                 ExchangeCreator.isViktorQuestChanged = true;
+                __result = true;
                 return false;
+            }
+
+            if(ExchangeCreator.isViktorQuestChanged)
+            {
+                ExchangeCreator.SetViktorsQuestToNormal();
+                ExchangeCreator.isViktorQuestChanged = false;
             }
 
             return true;
@@ -250,7 +283,7 @@ namespace ElementalFireTree.Patches
         }
     }*/
 
-    [HarmonyPatch(typeof(UITemplates), "CreatePurchaseUI")]
+    /*[HarmonyPatch(typeof(UITemplates), "CreatePurchaseUI")]
     class DebugPatches7
     {
         public static void Postfix(UITemplates __instance, Sprite titleIcon, string titleKey, PurchaseUI.Purchasable[] purchasables, bool hideNubuckCost, PurchaseUI.OnClose onClose, bool unavailInMainList = false)
@@ -259,5 +292,5 @@ namespace ElementalFireTree.Patches
             ("titleKey: " + titleKey).Log();
             ("Parent to: " + __instance.transform.parent).Log();
         }
-    }
+    }*/
 }

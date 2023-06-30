@@ -20,16 +20,16 @@ namespace Creators
                 "elementalFireSlime",
                 new SlimeEat.FoodGroup[1]
                 {
-                    SlimeEat.FoodGroup.FRUIT
+                    SlimeEat.FoodGroup.VEGGIES
                 },
 
                 new Identifiable.Id[1]
                 {
-                    Identifiable.Id.NONE
+                    Ids.ELEMENTAL_FIRE_PLORT
                 },
                 new Identifiable.Id[1]
                 {
-                    Identifiable.Id.NONE
+                    Identifiable.Id.GINGER_VEGGIE
                 },
                 ElementalFireTree.Main.assetBundle.LoadAsset<Sprite>("ElementalFireSlime"),
                 /*new SlimeAppearance.Palette
@@ -62,13 +62,9 @@ namespace Creators
                 if(i == 0)
                     continue;
                 GameObject prefab = structures[i].Element.Prefabs[0].gameObject;
-                ("Currently at prefab: " + i + ", it being: " + prefab.name + " and other name: " + structures[i].Element).Log();
                 prefab.GetComponent<Renderer>().enabled = false;
             }
 
-            ("element of structure 2 is: " + structures[1].Element.Name).Log();
-            ("element of structure 2 is: " + structures[2].Element.Name).Log();
-            ("in total there are " + structures.Length + " strucutre elements").Log();
             //structures[1].Element.Prefabs[0].
             /*foreach (Renderer rdr in structures[1].Element.Prefabs[0].GetComponentsInChildren<Renderer>())
             {
@@ -115,11 +111,9 @@ namespace Creators
             //slimeObject.AddComponent<FireSlimeIgnition>(); ///--------------------------------------------------->>>>>>>>
             //slimeObject.AddComponent<ShootWhenAgitated>();
 
-            "It works here".Log();
             slimeObject.AddComponent<DamagePlayerOnTouch>().GetCopyOf(SRSingleton<GameContext>.Instance.LookupDirector.GetPrefab(Identifiable.Id.ROCK_SLIME).GetComponentInChildren<DamagePlayerOnTouch>());
             slimeObject.GetComponent<DamagePlayerOnTouch>().damagePerTouch = 140;
             slimeObject.AddComponent<ElementalFireSlimeIgnition>();
-            "Now it doesn't".Log();
 
             //Replace DamagePlayerOnTouch with FireSlimeIgnition asap. Idea: when elemental fire slime gets hit by a liquid fire, it gets boosted up by a bit for a bi
 
@@ -138,11 +132,9 @@ namespace Creators
 
             slimeObject.GetComponent<SlimeRandomMove>().scootSpeedFactor *= 3;
             slimeObject.GetComponent<SlimeRandomMove>().verticalFactor *= 3;
-            "Let me guess, the error is about to happen here?".Log();
             slimeObject.AddComponent<ChangeParticlesAngry>();
             //slimeObject.AddComponent<ChangeParticlesNormal>();
 
-            "Riiiight here".Log();
             slimeObject.FindChild("RadSource(Clone)").GetComponent<RadSource>().radPerSecond = 100;
             /*Object.Destroy(slimeObject.FindChild("rad_aura_LOD0(Clone)", true));
             Object.Destroy(slimeObject.FindChild("rad_core_LOD0(Clone)", true));*/

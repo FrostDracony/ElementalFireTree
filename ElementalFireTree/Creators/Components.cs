@@ -22,7 +22,6 @@ namespace Creators
 		{
 			foreach (GameObject _gameObject in gameObjects)
 			{
-				("Name is: " + _gameObject.name).Log();
 				if (_gameObject.GetComponent<Identifiable>().id == Ids.ELEMENTAL_FIRE_SLIME)
 				{
 					_gameObject.GetComponent<SlimeRandomMove>().scootSpeedFactor *= 3;
@@ -41,12 +40,10 @@ namespace Creators
 		public void OnTriggerEnter(Collider slime)
 		{
 			Identifiable.Id id;
-			"Something entered in ThermalRegulator".Log();
 			if (slime.gameObject.GetComponent<Identifiable>() != null)
 			{
 				id = slime.gameObject.GetComponent<Identifiable>().id;
 				
-				("Id is: " + id).Log();
 
 				if (id == Ids.ELEMENTAL_FIRE_SLIME)
 				{
@@ -66,13 +63,9 @@ namespace Creators
 		{
 			Identifiable.Id id;
 
-			"Something exited in ThermalRegulator".Log();
-
 			if (slime.gameObject.GetComponent<Identifiable>() != null)
 			{
 				id = slime.gameObject.GetComponent<Identifiable>().id;
-
-				("Id is: " + id).Log();
 
 				if (id == Ids.ELEMENTAL_FIRE_SLIME)
 				{
@@ -162,12 +155,6 @@ namespace Creators
 		public bool liquidArrived = false;
 		public bool slimeArrived = false;
 
-		void Start()
-        {
-			"Start of StartFusionProcess Component".Log();
-			//transform.localScale = new Vector3(radius, radius, radius);
-        }
-
 /*		void Update()
         {
 			if(slimeArrived && liquidArrived)
@@ -201,16 +188,7 @@ namespace Creators
 				.Count() == 0
 				)
             {
-				("gameObject's name: " + gameObject.name + " with Id: " + idenComponent.id).Log();
-				("Containers of objectsInRadius:").Log();
-				int i1 = 0;
-				foreach (GameObject obj in objectsInRadius)
-				{
-					("	" + obj).Log();
-					i1.Log();
-					i1++;
-				}
-				"Adding this to the radius".Log();
+			
 				objectsInRadius.Add(gameObject);
 				//objectsInRadius.Add(gameObject, idenComponent.id);
 
@@ -247,36 +225,29 @@ namespace Creators
 					Destroy(_liquidFire);*/
 
 
-					"Both GameObjects are there".Log();
 
 					/*Rigidbody rigidBodyFireSlime = slimeFire.GetComponent<Rigidbody>();
 					Rigidbody rigidBodyLiquidFire = liquidFire.GetComponent<Rigidbody>();*/
 
-					"Both RigidBodies".Log();
 
 					//Destroy(slimeFire.GetComponent<PuddleSlimeScoot>());
 					Destroy(liquidFire.GetComponent<DestroyOnTouching>());
 
-					"Destroying the combonents".Log();
 
 					/*rigidBodyFireSlime.isKinematic = true;
 					rigidBodyLiquidFire.isKinematic = true;*/
 
-					"isKinematic set".Log();
 
 					/*rigidBodyFireSlime.detectCollisions = false;
 					rigidBodyLiquidFire.detectCollisions = false;*/
 
-					"detectCollisions set".Log();
 					
 					/*slimeFire.GetComponent<Collider>().isTrigger = false;
 					liquidFire.GetComponent<Collider>().isTrigger = false;*/
 
-					"Lets UnTimeBlock the 2 items now".Log();
 					//slimeFire.GetComponent<Rigidbody>().velocity *= 1.1f;
 					slimeFire.GetComponent<Rigidbody>().isKinematic = false;
 
-					"Kekw?".Log();
 					//liquidFire.GetComponent<Rigidbody>().velocity *= 1.1f;
 					liquidFire.GetComponent<Rigidbody>().isKinematic = false;
 
@@ -301,13 +272,10 @@ namespace Creators
 			/*if (!objectsInRadius.Contains(other.gameObject))
 				return;*/
 			Identifiable idenComponent = other.gameObject.GetComponent<Identifiable>();
-			("OnTriggerExit for " + other.gameObject).Log();
 
 			for(int i = 0;  i < timeSlowedObjs.Count; i++)
 			{
 				GameObject gameObject = timeSlowedObjs[i].gameObject;
-				"No way it's this... right? right?".Log();
-				("Lets see gameObject: " + gameObject).Log();
 
 				if (gameObject != null)
 				{
@@ -315,17 +283,12 @@ namespace Creators
 					gameObject.GetComponent<Rigidbody>().isKinematic = false;
 
 					timeSlowedObjs.Remove(gameObject);
-					"as if...".Log();
 				}
 			}
-			"This is fine".Log();
 			if (idenComponent != null && objectsInRadius.Contains(other.gameObject)) //objectsInRadius.Contains(other.gameObject)
 			{
-				"This... too?".Log();
 
-				("Object being removed has an Id of: " + idenComponent.id).Log();
 				objectsInRadius.Remove(other.gameObject);
-				"FOUND YA BITC-".Log();
 			}
 		}
 
@@ -451,17 +414,14 @@ namespace Creators
 		public int touchedByWater = 0;
 		public void Awake() 
 		{
-			"Wait this shouldn't be working right now".Log();
 			timeDir = SRSingleton<SceneContext>.Instance.TimeDirector;
 
 		}
 
 		public override void Start()
 		{
-			"Neither should this".Log();
 
 			isIgnited = !gameObject.GetComponent<ChangeParticlesAngry>().blocked;
-			("isIgnited at the start is now: " + !isIgnited).Log();
 			base.Start();
 			ExtractFire();
 			GetComponent<SlimeAppearanceApplicator>().OnAppearanceChanged += appearance => ExtractFire();
@@ -478,6 +438,11 @@ namespace Creators
 		{
 			if (!isIgnited)
 				return;
+
+			if (!enabled)
+				return;
+
+			//("About to destroy this object by col: " + enabled).Log();
 			col.gameObject.GetComponent<Ignitable>()?.Ignite(gameObject);
 			//"if it worked so far...".Log();
 		}
@@ -486,7 +451,11 @@ namespace Creators
 		{
 			if (!isIgnited)
 				return;
-			
+
+			if (!enabled)
+				return;
+
+			//("About to destroy this object by gameObj: " + enabled).Log();
 			gameObj.GetComponent<Ignitable>()?.Ignite(gameObject);
 		}
 
@@ -541,7 +510,7 @@ namespace Creators
 
 		public void AddLiquid(Identifiable.Id liquidId, float units)
 		{
-			"wait... NANI, NO WAY THIS IS ACTALLY FIRING?!".Log();
+			//"wait... NANI, NO WAY THIS IS ACTALLY FIRING?!".Log();
 			if (!Identifiable.IsWater(liquidId))
 				return;
 			touchedByWater++;
@@ -591,26 +560,16 @@ namespace Creators
 		public override void Action()
 		{
 
-			if (emotions.GetCurr(SlimeEmotions.Emotion.AGITATION) >= 0.6f)
+			if (emotions.GetCurr(SlimeEmotions.Emotion.AGITATION) > 0.5f)
 			{
-
+				//("lets see if it's blocked: " + blocked).Log();
 				if (!blocked)
 				{
-					gameObject.GetComponentInChildren<ParticleSystem>().gameObject.SetActive(false);
-
-					/*GameObject particles = Main.assetBundle.LoadAsset<GameObject>("MagicCircleVFX");
-					particles.transform.position = new Vector3(0, 0.25F, 0);
-					if (Shader.Find("SR/Particles/Additive") != null)
-					{
-						foreach (ParticleSystemRenderer particleSystemRenderer in particles.GetComponentsInChildren<ParticleSystemRenderer>())
-						{
-							particleSystemRenderer.material.shader = Shader.Find("SR/Particles/Additive");
-						}
-					}
-
-					Instantiate(particles, transform);*/
+					gameObject.GetComponentInChildren<ParticleSystem>()?.gameObject.SetActive(false);
+					gameObject.GetComponent<ElementalFireSlimeIgnition>().enabled = false;
+					//"yup it isn't blocked smh".Log();
+					
 					blocked = true;
-					//GetComponent<ChangeParticlesNormal>().blocked = false;
 				}
 
 				void CreateShot(Vector3 origin, Vector3 direction)
@@ -649,12 +608,15 @@ namespace Creators
 				}
 			}
 
-			if (emotions.GetCurr(SlimeEmotions.Emotion.AGITATION) < 0.6f)
+			if(emotions.GetCurr(SlimeEmotions.Emotion.AGITATION) <= 0.5f)
             {
 				if (blocked)
 				{
-					gameObject.GetComponentInChildren<ParticleSystem>().gameObject.SetActive(true);
-
+					//"Set it back to normal".Log();
+					gameObject.GetComponentInChildren<ParticleSystem>()?.gameObject.SetActive(true);
+					//"how about this?".Log();
+					gameObject.GetComponent<ElementalFireSlimeIgnition>().enabled = true;
+					//"And how about this????!!!!".Log();
 					blocked = false;
 					//GetComponent<ChangeParticlesNormal>().blocked = false;
 				}
@@ -676,21 +638,21 @@ namespace Creators
 			else if (emotions.GetCurr(SlimeEmotions.Emotion.AGITATION) < 0.5f)
 			{
 
-				/*GameObject particles = ElementalFireTree.Main.assetBundle.LoadAsset<GameObject>("ElementalFireParticles");
-				particles.transform.position = new Vector3(0, 0.5F, 0);
+                /*GameObject particles = ElementalFireTree.Main.assetBundle.LoadAsset<GameObject>("ElementalFireParticles");
+                particles.transform.position = new Vector3(0, 0.5F, 0);
 
-				if (Shader.Find("SR/Particles/Additive") != null)
-				{
-					foreach (ParticleSystemRenderer particleSystemRenderer in particles.GetComponentsInChildren<ParticleSystemRenderer>())
-					{
-						particleSystemRenderer.material.shader = Shader.Find("SR/Particles/Additive");
-					}
-				}
+                if (Shader.Find("SR/Particles/Additive") != null)
+                {
+                    foreach (ParticleSystemRenderer particleSystemRenderer in particles.GetComponentsInChildren<ParticleSystemRenderer>())
+                    {
+                        particleSystemRenderer.material.shader = Shader.Find("SR/Particles/Additive");
+                    }
+                }
 
-				Instantiate(particles, transform);*/
+                Instantiate(particles, transform);*/
 
 
-				/*if (transform.Find("MagicCircleVFX(Clone)"))
+                /*if (transform.Find("MagicCircleVFX(Clone)"))
 				{
 					Destroy(transform.Find("MagicCircleVFX(Clone)").gameObject);
 					GameObject particles = Main.assetBundle.LoadAsset<GameObject>("ElectricSparklesSlimes");
@@ -706,7 +668,7 @@ namespace Creators
 
 					Instantiate(particles, transform);
 				}*/
-			}
+            }
 
 			return 0f;
 		}

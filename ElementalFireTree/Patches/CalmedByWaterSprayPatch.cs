@@ -18,17 +18,14 @@ namespace ElementalFireTree.Patches
     {
         public static bool Prefix(SlimeIgniteReact __instance, GameObject igniter)
         {
-            ("igniter is: " + igniter).Log();
             if(igniter.name == "liquidfire(Clone)")
             {
-                ("is this water: " + Identifiable.IsWater(igniter.GetComponent<Identifiable>().id)).Log();
                 if (__instance.selfIsIgniter || Time.time < __instance.throttle)
                     return false;
                 __instance.throttle = Time.time + 0.2f;
                 if (__instance.igniteFX != null)
                     SRBehaviour.SpawnAndPlayFX(__instance.igniteFX, __instance.transform.position, __instance.transform.rotation);
                 __instance.faceAnim.SetTrigger("triggerAlarm");
-                "Yes I've done it: agitation set to low".Log();
                 __instance.emotions.Adjust(SlimeEmotions.Emotion.AGITATION, 0f);
                 return false;
             }

@@ -19,13 +19,9 @@ namespace ElementalFireTree.Patches
         {
 
             __instance.gameObject.PrintAllChildren();
-            "".Log();
-            ("About to see remove the liquidsourcecontainer, the list's length is: " + Main.specialColumns.Count).Log();
-            ("Name of FireBall prefab: " + __instance.fireballs[0].prefab).Log();
             for(int i = Main.specialColumns.Count - 1; i >= 0; i--)
             {
                 FireColumn column = Main.specialColumns[i];
-                ("lets see if column is a special column: " + (column == __instance)).Log();
 
                 Transform liquidSourceContainer = column.transform.Find("liquidSourceContainer");
                 if (liquidSourceContainer != null)

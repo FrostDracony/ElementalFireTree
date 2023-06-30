@@ -19,10 +19,8 @@ namespace ElementalFireTree.Upgrades
         {*/
             public override void Apply(LandPlot.Upgrade upgrade)
             {
-                ("Applying Upgrade: " + upgrade).Log();
                 if (upgrade == Ids.THERMAL_REGULATOR)
                 {
-                    ("CUSTOM CORRAL UPGRADE").Log();
 
                     GameObject ThermalRegulator = Instantiate(Main.assetBundle.LoadAsset<GameObject>("ThermalRegulator"), gameObject.transform);
                     ThermalRegulator.SetActive(true);
@@ -46,7 +44,6 @@ namespace ElementalFireTree.Upgrades
                 landplotPediaId = PediaDirector.Id.CORRAL,
                 isUnlocked = plot =>
                 {
-                    ("Progress with Viktor: " + SceneContext.Instance.ExchangeDirector.progressDir.GetProgress(SceneContext.Instance.ExchangeDirector.GetProgressEntry(ExchangeDirector.OfferType.VIKTOR).progressType)).Log();
                     if (SceneContext.Instance.ExchangeDirector.progressDir.GetProgress(SceneContext.Instance.ExchangeDirector.GetProgressEntry(ExchangeDirector.OfferType.VIKTOR).progressType) == 5)
                     {
                         return true;
