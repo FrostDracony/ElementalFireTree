@@ -272,7 +272,7 @@ namespace Creators
                 }
             }
 
-            Array.ForEach(messages, text =>
+           /* Array.ForEach(messages, text =>
             {
                 entryToReturn.Add(new RancherChatMetadata.Entry
                 {
@@ -312,7 +312,7 @@ namespace Creators
                 TranslationPatcher.AddExchangeTranslation(offerId, text);
 
                 i++;
-            });
+            });*/
 
             return entryToReturn.ToArray();
         }
