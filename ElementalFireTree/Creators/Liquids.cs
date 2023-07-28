@@ -31,8 +31,8 @@ namespace ElementalFireTree
             sphere.FindChild("FX Water Glops").GetComponent<ParticleSystemRenderer>().material = mat;
             //Prefab.GetComponent<SphereCollider>().isTrigger = true;
 
-            GameObject InFx = SRSingleton<GameContext>.Instance.LookupDirector.GetLiquidIncomingFX(liquidBase);
-            GameObject VacFailFx = SRSingleton<GameContext>.Instance.LookupDirector.GetLiquidVacFailFX(liquidBase);
+            GameObject InFx = SRML.Utils.PrefabUtils.CopyPrefab(SRSingleton<GameContext>.Instance.LookupDirector.GetLiquidIncomingFX(liquidBase));
+            GameObject VacFailFx = SRML.Utils.PrefabUtils.CopyPrefab(SRSingleton<GameContext>.Instance.LookupDirector.GetLiquidVacFailFX(liquidBase));
             LiquidDefinition definition = ScriptableObject.CreateInstance<LiquidDefinition>();
             definition.name = objName;
             InFx.FindChild("Water Glops").GetComponent<ParticleSystemRenderer>().material = mat;
@@ -42,12 +42,14 @@ namespace ElementalFireTree
             typeof(LiquidDefinition).GetField("vacFailFX", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).SetValue(definition, VacFailFx);
             LookupRegistry.RegisterLiquid(definition);
 
+            Identifiable.LIQUID_CLASS.Add(ID);
+
             /*GameObject liquidTrigger = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             liquidTrigger.name = (name+"Trigger");
             liquidTrigger.transform.localScale = Prefab.transform.localScale;
             liquidTrigger.transform.SetParent(Prefab.transform);
             //fSTrigger.GetComponent<Renderer>().enabled = false;*/
-            
+
             /*Rigidbody liquidTriggerRb = Prefab.GetComponent<Rigidbody>();//liquidTrigger.AddComponent<Rigidbody>();
             liquidTriggerRb.useGravity = true;
             liquidTriggerRb.detectCollisions = true;*/

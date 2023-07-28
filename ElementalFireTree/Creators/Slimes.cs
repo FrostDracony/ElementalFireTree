@@ -91,7 +91,7 @@ namespace Creators
             slimeObject.GetComponent<SlimeEat>().slimeDefinition = slimeDefinition;
             slimeObject.GetComponent<Identifiable>().id = SlimeId;
             if (slimeObject.GetComponent<PinkSlimeFoodTypeTracker>())
-                GameObject.Destroy(slimeObject.GetComponent<PinkSlimeFoodTypeTracker>());
+                Object.Destroy(slimeObject.GetComponent<PinkSlimeFoodTypeTracker>());
 
             SlimeAppearance slimeAppearance = (SlimeAppearance)PrefabUtils.DeepCopyObject(slimeDefinitionToUse.AppearancesDefault[0]);
             slimeDefinition.AppearancesDefault[0] = slimeAppearance;

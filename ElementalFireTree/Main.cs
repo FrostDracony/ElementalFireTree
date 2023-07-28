@@ -199,9 +199,6 @@ namespace ElementalFireTree
             #region Handling Slimes
             Slimes.RegisterAllSlimes();
             #endregion
-
-            //LookupRegistry.RegisterUpgradeEntry(Ids.FIRE_LIQUID_VAC, assetBundle.LoadAsset<Sprite>("gravityCuff"), 2000);
-
         }
 
         //Called after all mods Load's have been called

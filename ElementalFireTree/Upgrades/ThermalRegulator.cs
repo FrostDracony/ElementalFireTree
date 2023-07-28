@@ -44,7 +44,7 @@ namespace ElementalFireTree.Upgrades
                 landplotPediaId = PediaDirector.Id.CORRAL,
                 isUnlocked = plot =>
                 {
-                    if (SceneContext.Instance.ExchangeDirector.progressDir.GetProgress(SceneContext.Instance.ExchangeDirector.GetProgressEntry(ExchangeDirector.OfferType.VIKTOR).progressType) == 5)
+                    if (SceneContext.Instance.ExchangeDirector.progressDir.GetProgress(SceneContext.Instance.ExchangeDirector.GetProgressEntry(ExchangeDirector.OfferType.VIKTOR).progressType) >= 5)
                     {
                         return true;
                     }

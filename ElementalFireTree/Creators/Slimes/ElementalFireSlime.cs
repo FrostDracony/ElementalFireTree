@@ -5,6 +5,7 @@ using UnityEngine;
 using ElementalFireTree;
 using Console = SRML.Console.Console;
 using MonomiPark.SlimeRancher.Regions;
+using System.Linq;
 
 namespace Creators
 {
@@ -61,33 +62,17 @@ namespace Creators
             {
                 if(i == 0)
                     continue;
-                GameObject prefab = structures[i].Element.Prefabs[0].gameObject;
-                prefab.GetComponent<Renderer>().enabled = false;
+                SlimeAppearanceObject[] slimeAppearanceObjects = structures[i].Element.Prefabs.ToArray();
+                GameObject LOD0 = PrefabUtils.CopyPrefab(slimeAppearanceObjects[0].gameObject);
+                ("LOD0 is: " + LOD0).Log();
+                ("slimeAppearanceObjects[0] is: " + slimeAppearanceObjects[0].name).Log(); 
+                LOD0.GetComponent<Renderer>().enabled = false;
+
+                structures[i].Element.Prefabs[0] = LOD0.GetComponent<SlimeAppearanceObject>();
+
+                //structures[i].Element.Prefabs[0].gameObject = prefab;
             }
-
-            //structures[1].Element.Prefabs[0].
-            /*foreach (Renderer rdr in structures[1].Element.Prefabs[0].GetComponentsInChildren<Renderer>())
-            {
-                rdr.enabled = false;
-            }*/
-            /*foreach (SlimeAppearanceStructure s[limeAppearanceStructure in structures)
-            {
-                Material[] defaultMaterials = slimeAppearanceStructure.DefaultMaterials;
-                if (defaultMaterials != null && defaultMaterials.Length != 0)
-                {
-                    material.SetColor("_TopColor", new Color32(190, 28, 255, 255));
-                    material.SetColor("_MiddleColor", new Color32(159, 28, 255, 255));
-                    material.SetColor("_BottomColor", new Color32(120, 28, 255, 255));
-                    material.SetColor("_SpecColor", new Color32(205, 28, 255, 255));
-
-                    material.SetFloat(Shader.PropertyToID("_Gloss"), 3.5F);
-                    material.SetFloat(Shader.PropertyToID("_GlossPower"), 6F);
-                    material.SetFloat(Shader.PropertyToID("_Shininess"), 2F);
-
-                    slimeAppearanceStructure.DefaultMaterials[0] = material;
-                }
-            }*/
-
+            
             SlimeExpressionFace[] expressionFaces = slimeAppearance.Face.ExpressionFaces;
             for (int k = 0; k < expressionFaces.Length; k++)
             {
@@ -136,6 +121,7 @@ namespace Creators
             //slimeObject.AddComponent<ChangeParticlesNormal>();
 
             slimeObject.FindChild("RadSource(Clone)").GetComponent<RadSource>().radPerSecond = 100;
+            ("is there an LOD aura clone?: " + slimeObject.FindChild("Appearance/bone_root/bone_slime/rad_aura_LOD0(Clone)", true)?.name).Log();
             /*Object.Destroy(slimeObject.FindChild("rad_aura_LOD0(Clone)", true));
             Object.Destroy(slimeObject.FindChild("rad_core_LOD0(Clone)", true));*/
             //Object.Destroy(slimeObject.GetComponent(typeof(PinkSlimeFoodTypeTracker)));
